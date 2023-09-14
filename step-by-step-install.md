@@ -1,48 +1,48 @@
-# 新手教程-安装
+# Новичок-руководство по установке
 
- 仅在CentOS7/ ubuntu 16 + 测试如下安装过程
+Только на CentOS7/ ubuntu 16 + протестирован следующий процесс установки.
 
-#### 1. 必要软件安装
+#### 1. Установка необходимого ПО
 
-- ubuntu/debian （推荐）
+- ubuntu/debian （рекомендуется）
 ```bash
-# 获得root权限
+# Получить права root
 sudo su
-# 更新软件源
+# Обновить репозитории
 apt-get update
-# 安装必要软件
+# Установить необходимые программы
 apt install vim nginx openjdk-8-jre wget unzip  -y
-# 安装v2ray -来源官网新版
+# Установить v2ray - с официального сайта новая версия
 bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) --version 5.3.0
 
 ```
-- CentOS （据反映有selinux相关的问题）
+- CentOS (есть проблемы связанные с selinux)
 ```bash
 sudo su
 yum update
 yum makecache
 yum install epel-release
-# 安装必要软件
+# Установить необходимые программы
 yum install vim nginx java-1.8.0-openjdk wget unzip -y
-# 安装v2ray -来源官网
+# Установить v2ray - с официального сайта
 bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) --version 5.3.0
 ```
 
        
-####  2. 配置nginx
+####  2. Настройка nginx
 ```bash
-# 进入到nginx配置文件夹
+# Перейти в директорию с конфигурационными файлами nginx
 cd /etc/nginx/conf.d
 vi v2ray-manager.conf
 ```
-> 复制下面的配置 ,`i编辑`,`右键粘贴` （各个ssh客户端可能不同）
-> `ESC ` `:wq` 退出并保存
+> Скопируйте приведенную ниже конфигурацию, используйте i для редактирования, правый клик мыши для вставки (может отличаться в разных SSH-клиентах).
+> Нажмите ESC, затем :wq для сохранения и выхода.
 
 ```
 server {
 
   listen 80 ;
-  server_name 127.0.0.1; #修改为自己的IP/域名
+  server_name 127.0.0.1; #Замените на свой IP-адрес или доменное имя
   root /opt/jar/web;
                 
   location /api {
@@ -64,129 +64,130 @@ server {
 ```
 
 ```bash
-# 使nginx配置生效
-# 执行没有报错，则配置成功
+# Применить настройки nginx
+# Если выполнение прошло без ошибок, значит, конфигурация успешна
 nginx -s reload
 ```        
             
-####  3. 下载文件releases文件
+####  3. Загрузка файлов из раздела "releases"
 
 
- [java服务-releases页面](https://github.com/master-coder-ll/v2ray-web-manager/releases)
+ [Страница релизов Java-сервиса](https://github.com/romaxa55/v2ray-web-manager/releases)
  
- [前端服务-releases页面](https://github.com/master-coder-ll/v2ray-manager-console/releases)
+ [Страница релизов веб-интерфейса](https://github.com/romaxa55/v2ray-manager-console/releases)
 
 ```bash
-# 创建目录
+# Создать директорию
 mkdir /opt/jar -p
 cd /opt/jar 
 
-# 下载releases包
+# Загрузить файлы релизов
 wget -c https://glare.now.sh/master-coder-ll/v2ray-web-manager/admin -O admin.jar
 wget -c https://glare.now.sh/master-coder-ll/v2ray-manager-console/dist -O dist.zip
 wget -c https://glare.now.sh/master-coder-ll/v2ray-web-manager/v2ray-proxy -O v2ray-proxy.jar
 
-# 解压前端到web文件夹
+# Распаковать веб-интерфейс в директорию "web"
 unzip dist.zip  -d web
 
-#前端项目部署完成
+# Завершение развертывания веб-проекта
 ```
 
 
-####  4. 配置
+####  4. Настройка
      
 ```bash
-# 下载管理服务的配置文件
+# Загрузить конфигурационный файл управляющего сервиса
 wget -c --no-check-certificate https://raw.githubusercontent.com/master-coder-ll/v2ray-web-manager/master/conf/admin.yaml
 
-# 下载代理服务的配置文件
+# Загрузить конфигурационный файл прокси-сервиса
 wget -c --no-check-certificate https://raw.githubusercontent.com/master-coder-ll/v2ray-web-manager/master/conf/proxy.yaml
 
-# 下载v2ray的专用配置文件
+# Загрузить специализированный конфигурационный файл для v2ray
 wget -c --no-check-certificate https://raw.githubusercontent.com/master-coder-ll/v2ray-web-manager/master/conf/config.json
+
 ```  
 
-按自己的情况，配置 admin/proxy 配置文件,可以下载到你电脑修改后在上传`/opt/jar/`，并且保持UTF-8的编码。
-  
-- admin.yaml 需要你手动配置的部分：
+Настройте файлы конфигурации admin и proxy в соответствии со своими потребностями. Вы можете загрузить их на свой компьютер, внести изменения и затем загрузить обратно в /opt/jar/, убедившись, что используется кодировка UTF-8.  
+- В файле admin.yaml вам потребуется настроить следующие параметры：
 
-          # 所有参数:（冒号）后面都要有空格 
-            email: 
-               #stmp地址
-               host: 
-               #用户名称
-               userName: 
-               #密码
-               password:
-               #端口
-               port: 
-               #默认false ,邮件不支持startTls不要开启
-               startTlsEnabled: false
-            
-            proxy:
-             #与porxy交互的密码，也是各种token的私钥
-             authPassword: ''
-             
-            admin:
-              #第一次启动时候的账号和密码
-              email: admin@admin.com
-              password: 123456
+    # Все параметры после двоеточия должны быть отделены пробелом 
+      email: 
+         #Адрес SMTP
+         host: 
+         #Имя пользователя
+         userName: 
+         #Пароль
+         password:
+         #Порт
+         port: 
+         #По умолчанию false, если почта не поддерживает startTls, не активируйте
+         startTlsEnabled: false
+      
+      proxy:
+       #Пароль для взаимодействия с прокси, также используется как приватный ключ для различных токенов
+       authPassword: ''
+       
+      admin:
+        #Логин и пароль при первом запуске
+        email: admin@admin.com
+        password: 123456
 
-- proxy.yaml 需要你手动配置的如下：
+
+- В файле proxy.yaml вам потребуется настроить следующие параметры:
          
-            proxy:
-              authPassword: ''
-              
-            manager:
-                # 如果admin端不在本机需要修改
-                address:  http://127.0.0.1:9091
+      proxy:
+        authPassword: ''
+        
+      manager:
+          # Если сервис admin находится не на этом же сервере, измените адрес
+          address:  http://127.0.0.1:9091
  
- 我这里不需要注册用户，并且admin和proxy 都在本机 ，我只需要修改2个配置文件的`proxy.authPassword`为一个随机的字符串如`1234abc` 。并且管理员账号密码我也使用默认。
+В моем случае регистрация пользователей не требуется, и сервисы admin и proxy находятся на одном и том же сервере. Мне нужно было изменить только параметр proxy.authPassword в обоих конфигурационных файлах на случайную строку, например, 1234abc. Для входа в систему я использовал стандартные учетные данные администратора.
  
-####  5. 配置v2ray
+####  5. Настройка v2ray
 
 ```bash
-# 备份v2ray默认配置
+# Создать резервную копию стандартной конфигурации v2ray
 mv /usr/local/etc/v2ray/config.json /usr/local/etc/v2ray/config.json.bak
 
-# 复制配置到v2ray目录
+# Копировать конфигурацию в директорию v2ray
 cp /opt/jar/config.json /usr/local/etc/v2ray/
 
-# 重启v2ray
+# Перезапустить v2ray
 service v2ray stop
 service v2ray start
 ```
      
-####  6. 运行java
+####  6. Запуск Java
      
 ```bash
-# 创建默认数据库目录
+# Создать стандартный каталог базы данных
 mkdir /opt/jar/db -p
 
-# 运行 admin
+# Запустить admin
 nohup java -jar -Xms40m -Xmx40m -XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=80m  /opt/jar/admin.jar --spring.config.location=/opt/jar/admin.yaml > /dev/null 2>&1 &
 
-# 运行 v2ray-proxy
+# Запустить v2ray-proxy
 nohup java -jar -Xms40m -Xmx40m -XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=80m /opt/jar/v2ray-proxy.jar --spring.config.location=/opt/jar/proxy.yaml > /dev/null 2>&1 &
 ```
 
-####  7. 查看日志
+####  7. Просмотр логов
 ```bash
-# 查看admin日志
+# Просмотреть логи admin
 tail -100f /opt/jar/logs/admin.log
 
-# 查看admin的错误日志(version > v3.1.5)
+# Просмотреть ошибки в логах admin (версия > v3.1.5)
 tail -100f /opt/jar/logs/admin.log.ERROR
     
-# 查看 v2ray-proxy日志
+# Просмотреть логи v2ray-proxy
 tail -100f /opt/jar/logs/v2ray-proxy.log
 
-# 查看v2ray-proxy的错误日志(version > v3.1.5)
+# Просмотреть ошибки в логах v2ray-proxy (версия > v3.1.5)
 tail -100f /opt/jar/logs/v2ray-proxy.log.ERROR
     
-# ctrl+c 退出查看日志
+# ctrl+c для выхода из просмотра логов
 ```
 
 
-### 全部完成，部署成功！
-访问 http://`ip` 出现登录页面，成功登录管理员账号，则服务运行成功  
+### Все завершено, развертывание успешно!
+Если при посещении http://ip отображается страница входа и вы успешно вошли в систему с учетной записью администратора, это означает, что сервис успешно запущен.
