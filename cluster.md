@@ -1,54 +1,56 @@
->本片教程-你将会学到如何将一台新的机器加入到已有的集群中。
+В этом руководстве вы узнаете, как добавить новую машину в существующий кластер.
 
-## 前置要求
- [一步一步跟着我从零安装](https://github.com/master-coder-ll/v2ray-web-manager/blob/master/step-by-step-install.md)
+## Предварительные требования
+
+ [Шаг за шагом следуйте моим инструкциям по установке с нуля](https://github.com/romaxa55/v2ray-web-manager/blob/master/step-by-step-install.md)
  
- [一步一步跟着我从零配置](https://github.com/master-coder-ll/v2ray-web-manager/blob/master/step-by-step-conf.md)
+ [Шаг за шагом следуйте моим инструкциям по настройке с нуля](https://github.com/romaxa55/v2ray-web-manager/blob/master/step-by-step-conf.md)
  
- 已经能运行单机器模式。
+ Уже может работать в режиме одной машины.
  
- ## 新机器中安装
+ ## Установка на новой машине
+
  
- #### 1. 必要软件安装
+ #### 1. Установка необходимого программного обеспечения
   
  - ubuntu    
  ```bash
- # 获得root权限
- sudo su
- # 更新软件源
- apt-get update
- # 安装必要软件
- apt install vim nginx openjdk-8-jre wget unzip  -y
- # 安装v2ray -来源官网
+ # Получить права root
+sudo su
+# Обновить источники программ
+apt-get update
+# Установить необходимое программное обеспечение
+apt install vim nginx openjdk-8-jre wget unzip  -y
+# Установить v2ray - с официального сайта
 bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
- 
+
  ```
  - CentOS
  ```bash
- sudo su
- yum update
- yum makecache
- yum install epel-release
- # 安装必要软件
- yum install vim nginx java-1.8.0-openjdk wget unzip -y
- # 安装v2ray -来源官网
+sudo su
+yum update
+yum makecache
+yum install epel-release
+# Установить необходимое программное обеспечение
+yum install vim nginx java-1.8.0-openjdk wget unzip -y
+# Установить v2ray - с официального сайта
 bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
  ```
     
-####  2. 配置nginx
+####  2. Настройка nginx
 ```bash
-# 进入到nginx配置文件夹
+# Перейти в папку с конфигурационными файлами nginx
 cd /etc/nginx/conf.d
 vi v2ray-manager.conf
 ```
-> 复制下面的配置 ,`i编辑`,`右键粘贴` （各个ssh客户端可能不同）
-> `ESC ` `:wq` 退出并保存
+> Скопируйте следующую конфигурацию, i для редактирования, правая кнопка мыши для вставки (может отличаться в разных SSH-клиентах)
+> ESC :wq для выхода и сохранения
 
 ```
 server {
 
   listen 80 ;
-  server_name 127.0.0.1; #修改为自己的IP/域名
+  server_name 127.0.0.1; # Измените на свой IP/домен
  
 
   location /ws/ {
@@ -66,101 +68,100 @@ server {
 ```
 
 ```bash
-# 使nginx配置生效
-# 执行没有报错，则配置成功
+# Применить настройки nginx
+# Если нет ошибок, то настройка прошла успешно
 nginx -s reload
 ```        
-####  3. 下载文件releases文件
+####  3. Загрузка файлов releases
 
- [java服务-releases页面](https://github.com/master-coder-ll/v2ray-web-manager/releases)
+ [Страница релизов java-сервиса](https://github.com/romaxa55/v2ray-web-manager/releases)
     
  ```bash
- # 创建目录
- mkdir /opt/jar -p
- cd /opt/jar 
- 
- # 下载releases包
- wget -c https://glare.now.sh/master-coder-ll/v2ray-web-manager/v2ray-proxy -O v2ray-proxy.jar
+# Создать директорию
+mkdir /opt/jar -p
+cd /opt/jar 
+
+# Загрузить пакет releases
+wget -c https://glare.now.sh/romaxa55/v2ray-web-manager/v2ray-proxy -O v2ray-proxy.jar
 
  ```
  
  
- ####  4. 配置
+ ####  4. Настройка
       
  ```bash
 
- # 下载代理服务的配置文件
- wget -c --no-check-certificate https://raw.githubusercontent.com/master-coder-ll/v2ray-web-manager/master/conf/proxy.yaml
+# Загрузить файл конфигурации прокси-сервиса
+wget -c --no-check-certificate https://raw.githubusercontent.com/romaxa55/v2ray-web-manager/master/conf/proxy.yaml
+
+# Загрузить специальный файл конфигурации v2ray
+wget -c --no-check-certificate https://raw.githubusercontent.com/romaxa55/v2ray-web-manager/master/conf/config.json
+```  
  
- # 下载v2ray的专用配置文件
- wget -c --no-check-certificate https://raw.githubusercontent.com/master-coder-ll/v2ray-web-manager/master/conf/config.json
- ```  
- 
- 按自己的情况，配置proxy 配置文件,可以下载到你电脑修改后在上传`/opt/jar/`，并且保持UTF-8的编码。
-    
- - proxy.yaml 需要你手动配置的如下：
+Настройте файл proxy в соответствии со своими требованиями, вы можете загрузить его на свой компьютер, внести изменения и затем загрузить обратно в /opt/jar/, сохраняя кодировку UTF-8.    
+ - В proxy.yaml вам нужно будет настроить следующее:
           
-             proxy:
-             # 修改为admin.yaml中相同的字符串
-               authPassword: ''
-               
-             manager:
-                 # 【注意】修改为admin所在机器的地址，并且能telnet通
-                 address:  http://127.0.0.1:9091
+      proxy:
+      # Измените на ту же строку, что и в admin.yaml
+        authPassword: ''
+        
+      manager:
+          # 【Внимание】Измените на адрес машины, на которой находится admin, и убедитесь, что telnet работает
+          address:  http://127.0.0.1:9091
   
   
- ####  5. 配置v2ray
+ ####  5. Настройка v2ray
  
  ```bash
- # 备份v2ray默认配置
+# Создать резервную копию стандартной конфигурации v2ray
 mv /usr/local/etc/v2ray/config.json /usr/local/etc/v2ray/config.json.bak
 
- # 复制配置到v2ray目录
+# Скопировать конфигурацию в директорию v2ray
 cp /opt/jar/config.json /usr/local/etc/v2ray/
- 
- # 重启v2ray
- service v2ray restart
+
+# Перезапустить v2ray
+service v2ray restart
  ```
       
- ####  6. 运行java
+ ####  6. Запуск java
       
  ```bash
 
- # 运行 v2ray-proxy
- nohup java -jar -Xms40m -Xmx40m -XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=80m /opt/jar/v2ray-proxy.jar --spring.config.location=/opt/jar/proxy.yaml > /dev/null 2>&1 &
+# Запустить v2ray-proxy
+nohup java -jar -Xms40m -Xmx40m -XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=80m /opt/jar/v2ray-proxy.jar --spring.config.location=/opt/jar/proxy.yaml > /dev/null 2>&1 &
  ```
  
- ####  7. 查看日志
+ ####  7. Просмотр логов
  ```bash
 
- #查看java 进程是否已经存在
- ps -ef |grep java 
- 
- # 查看 v2ray-proxy日志
- tail -100f /opt/jar/logs/v2ray-proxy.log
- 
- # 查看v2ray-proxy的错误日志(version > v3.1.5)
- tail -100f /opt/jar/logs/v2ray-proxy.log.ERROR
-     
- # ctrl+c 退出查看日志
+# Проверить, запущен ли процесс java
+ps -ef |grep java 
+
+# Просмотреть лог v2ray-proxy
+tail -100f /opt/jar/logs/v2ray-proxy.log
+
+# Просмотреть ошибки в логе v2ray-proxy (версия > v3.1.5)
+tail -100f /opt/jar/logs/v2ray-proxy.log.ERROR
+    
+# ctrl+c для выхода из просмотра лога
+
  ```
  
- ### 8.管理端-页面
+ ### 8.Административный интерфейс
  
-参考： [一步一步跟着我从零配置](https://github.com/master-coder-ll/v2ray-web-manager/blob/master/step-by-step-conf.md)
+Смотрите： [Шаг за шагом следуйте моим инструкциям по настройке с нуля](https://github.com/romaxa55/v2ray-web-manager/blob/master/step-by-step-conf.md)
 
-其中**访问域名**为指向当前的机器的IP/域名
+Где домен для доступа указывает на IP/домен текущей машины.
 
-### 9.HTTPS支持
+### 9.Поддержка HTTPS
 
-参考：[中级-为服务提供tls(https/wss)支持](https://github.com/master-coder-ll/v2ray-web-manager/blob/master/support-https.md)
+Смотрите：[Средний уровень - предоставление поддержки tls (https/wss)](https://github.com/romaxa55/v2ray-web-manager/blob/master/support-https.md)
 
-如果说TLS支持泛域名，那么复制TLS文件到当前机器，并且配置就好。
+Если поддержка TLS распространяется на поддомены, просто скопируйте файлы TLS на текущую машину и настройте их.
 
-注意：域名是不能相同的，比喻机器1的域名是`test.test.com`,机器2的域名**不能**也是`test.test.com`，只能是`test2.test.com`等不同的域名。
-admin端根据IP/域名的不同区分服务器。
+Обратите внимание: домены не должны совпадать. Например, если домен машины 1 - test.test.com, домен машины 2 не может быть таким же, он должен быть, например, test2.test.com. Административный интерфейс различает серверы по разным IP/доменам.
 
-理论： [高级-模式](https://github.com/master-coder-ll/v2ray-web-manager/blob/master/step-by-step-model.md)
+Теория： [Высший уровень - режимы](https://github.com/romaxa55/v2ray-web-manager/blob/master/step-by-step-model.md)
 
       
  
