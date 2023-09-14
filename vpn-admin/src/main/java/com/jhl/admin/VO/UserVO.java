@@ -25,7 +25,7 @@ public class UserVO extends BaseEntityVO implements Serializable {
     private List<MessageVO> messagesVO ;
 
     private String vCode;
-    //邀请码
+    //Пригласительный код
     private  String inviteCode;
 
 

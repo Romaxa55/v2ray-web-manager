@@ -14,13 +14,13 @@ import java.io.Serializable;
 public class PackageVO extends BaseEntityVO implements Serializable {
 
     private String name;
-    //宽带
+    // Широкополосное соединение
     private Integer bandwidth;
 
     private Integer speed;
 
     private  Integer  connections;
-    //周期
+    //цикл
     /**
      *0 1 30
      */
@@ -33,13 +33,13 @@ public class PackageVO extends BaseEntityVO implements Serializable {
     private Integer price;
 
     private  Integer show;
-    //间隔
+    //объясните
     private  Integer interval;
 
     /**
-     * 计划类型
-     * standard, 相同的 plan 应该可以直接叠加，不同的 plan 不应该叠加
-     * plus ,可叠加加油包
+     * Тип плана
+     * standard (стандарт) - одинаковые планы могут быть накладываемыми друг на друга, разные планы не могут быть накладываемыми друг на друга.
+     * plus (плюс) - можно добавлять дополнительные пакеты.
      */
     private String planType;
 

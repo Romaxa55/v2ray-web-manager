@@ -19,11 +19,11 @@ public class ServerVO extends BaseEntityVO implements Serializable {
     private Integer clientPort = 443;
     private Boolean supportTLS = true;
 
-    //proxy中间件管理 ip port;
+    //IP и порт для управления прокси-посредником.
 
     private String proxyIp = "127.0.0.1";
     private Integer proxyPort = 8091;
-    //v2ray 开放 的 ip 和端口
+    //Открытые IP и порты для V2ray
     private String v2rayIp = "127.0.0.1";
     private Integer v2rayManagerPort=62789;
     private Integer v2rayPort = 6001;
@@ -33,23 +33,23 @@ public class ServerVO extends BaseEntityVO implements Serializable {
 
     private String protocol;
 
-    //流量倍数
+    //Множитель трафика."
     private Double multiple;
 
-    //说明
+    //инструкциями
     private String desc;
-    //服务器状态
+    //Состояние сервера
     private Integer status;
 
     private String inboundTag;
 
     /**
-     * 服务器等级
+     * Серверный статус
      */
     private  Short level;
 
 
-    //ws路径
+    // WS-путь
     private String wsPath ="/ws/%s/";
 
     private Integer  alterId=64;

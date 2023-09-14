@@ -1,11 +1,11 @@
 package com.jhl.framework.proxy.exception;
 
 /**
- * 申明需要内存回收
+ * Указание на необходимость сборки мусора (освобождения памяти).
  *
  */
 public class ReleaseDirectMemoryException extends  Exception {
-private static  String str ="此异常忽略，声明需要回收直接内存|";
+private static  String str ="Это исключение игнорируется, указывается необходимость освобождения прямой памяти.";
     public ReleaseDirectMemoryException() {
         this(str);
     }

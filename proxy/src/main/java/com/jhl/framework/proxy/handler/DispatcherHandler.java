@@ -30,9 +30,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.UUID;
 
-/**
- * TODO 重构
- */
 @Slf4j
 public class DispatcherHandler extends ChannelInboundHandlerAdapter {
 
@@ -40,7 +37,7 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
     private static final String HOST = "HOST";
     private static final Long MAX_INTERVAL_REPORT_TIME_MS = 1000 * 60 * 5L;
     /**
-     * proxy端配置数据
+     * Данные конфигурации на стороне прокси
      */
     final ProxyConstant proxyConstant;
 
@@ -75,16 +72,16 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
 
             try {
                 if (proxyAccountService.interrupted(accountNo, host, version))
-                    throw new ReleaseDirectMemoryException("【当前版本已经更新】抛出异常。统一内存释放");
+                    throw new ReleaseDirectMemoryException("[Текущая версия обновлена] Выдается исключение. Единый выпуск памяти");
 
                 writeToOutBoundChannel(msg, ctx);
-                //异步
+                //асинхронный
                 ConnectionStatsCache.reportConnectionNum(accountNo, proxyIp);
-                //异步
+                //асинхронный
                 reportFlowStat();
             } catch (Exception e) {
                 if (!(e instanceof ReleaseDirectMemoryException)) {
-                    log.error("数据交互发生异常：", e);
+                    log.error("Исключение произошло при взаимодействии данных：", e);
                 }
                 release((ByteBuf) msg);
                 closeOnFlush(ctx.channel(),outboundChannel);
@@ -116,12 +113,12 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
 
         if (accountNo == null) return;
 
-        //减少channel 引用计数
+        //Уменьшите количество ссылок на каналы
         ConnectionStatsCache.decrement(accountNo, host);
 
         if (proxyIp != null) ConnectionStatsCache.reportConnectionNum(accountNo, proxyIp);
 
-       /* log.info("{}账号关闭连接后:{},服务器:{},全局:{}", getAccountId(), accountConnections,
+       /* log.info("{}После того, как учетная запись закроет соединение: {}, сервер: {}, глобальный:{}", getAccountId(), accountConnections,
                 ConnectionStatsCache.getBySeverInternal(accountNo),
                 ConnectionStatsCache.getByGlobal(accountNo));*/
 
@@ -134,7 +131,7 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
             long readBytes = trafficCounter.cumulativeReadBytes();
             //统计流量
             reportFlowStat(writtenBytes, readBytes);
-            log.info("账号:{},当前服务器完全断开连接,累计字节:{}B", getAccountId(), writtenBytes + readBytes);
+            log.info("Аккаунт: {}, текущий сервер полностью отключен, накоплено байт: {}B", getAccountId(), writtenBytes + readBytes);
             //   log.info("当前{},累计读字节:{}", accountNo, readBytes);
             TrafficControllerCache.releaseGroupGlobalTrafficShapingHandler(getAccountId());
             // ConnectionStatsService.delete(getAccountId());
@@ -166,23 +163,23 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
 
         } catch (Exception e) {
             if (!(e instanceof ReleaseDirectMemoryException))
-                log.warn("解析阶段发生错误:{},e:{}", ((ByteBuf) msg).toString(Charset.defaultCharset()), e.getLocalizedMessage());
+                log.warn("Произошла ошибка на этапе синтаксического анализа.:{},e:{}", ((ByteBuf) msg).toString(Charset.defaultCharset()), e.getLocalizedMessage());
 
             closeOnFlush(ctx.channel(),outboundChannel);
             return;
         } finally {
-            //释放握手数据，防止内存溢出
+            //Освободите данные рукопожатия, чтобы предотвратить переполнение памяти.
             ReferenceCountUtil.release(msg);
         }
         //step2
         try {
-            // 获取proxyAccount
+            // Получить прокси-аккаунт
             ProxyAccountWrapper proxyAccount = getProxyAccount();
 
             if (proxyAccount == null || isFull(proxyAccount)) {
-                    throw new IllegalAccessException("获取不到账号或者连接数已经满");
+                    throw new IllegalAccessException("Невозможно получить учетную запись или количество подключений заполнено");
             }
-            log.info("当前账号:{},连接数:{},服务器连接数:{},全局连接数:{}", getAccountId(),
+            log.info("Текущий аккаунт: {}, количество подключений: {}, количество подключений к серверу: {}, количество глобальных подключений: {}", getAccountId(),
                     ConnectionStatsCache.getByHost(accountNo, host),
                     ConnectionStatsCache.getBySeverInternal(accountNo)
                     , ConnectionStatsCache.getByGlobal(accountNo));
@@ -192,7 +189,7 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
             sendNewPackageToClient(ctx, handshakeByteBuf, ctx.channel(), proxyAccount);
 
         } catch (Exception e) {
-            log.error("建立与v2ray连接阶段发送错误", e);
+            log.error("Ошибка при установлении соединения с v2ray", e);
             release(handshakeByteBuf);
             closeOnFlush(ctx.channel(),outboundChannel);
         } finally {
@@ -208,7 +205,7 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * 解析握手数据，并且生成新的握手数据
+     * Анализ данных рукопожатия и создание новых данных рукопожатия
      */
     private ByteBuf convert(final ChannelHandlerContext ctx, final Object msg) throws Exception {
         ByteBuf byteBuf = ((ByteBuf) msg);
@@ -222,27 +219,27 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
         //50001:token/
         String[] accountNoAndToken = requestRow[1].split("/")[2].split(":");
 
-        if (accountNoAndToken.length < 2) throw new NullPointerException("旧版接入不在支持");
+        if (accountNoAndToken.length < 2) throw new NullPointerException("Доступ к старой версии больше не поддерживается.");
 
         accountNo = accountNoAndToken[0];
 
         String token = accountNoAndToken[1];
 
         checkToken(token);
-        // /ws/50001:token/ ,定位目录
+        // /ws/50001:token/ ,Найти каталог
         String directory = requestRow[1];
         int directoryLen = directory.length();
-        //+1 因为 :占1
+        //+1 Потому что: приходится 1
         int tokenLen = token.length() + accountNo.length() + 1;
         // /ws/
         String newHeadPackage = heads.replaceAll(directory, directory.substring(0, directoryLen - (tokenLen + 1)));
-        //整形后的新握手数据
+        //Сформированные новые данные рукопожатия
         // log.info("dispatcher:{}",ctx.alloc().getClass() , ctx.alloc().buffer());
         return ctx.alloc().buffer().writeBytes(newHeadPackage.getBytes());
     }
 
     /**
-     * 判断是否超过最大连接数
+     * Определить, превышено ли максимальное количество подключений
      *
      * @param proxyAccount ProxyAccount
      * @return true is full
@@ -258,8 +255,8 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
 
         if (globalConnections > currentMaxConnection) {
             reportConnectionLimit();
-            log.warn("已经触发最大连接数上限，当前允许最大值:{}，" +
-                    "后续一个小时账号全局连接数仅允许最大值半数接入", currentMaxConnection);
+            log.warn("Сработал верхний предел максимального количества подключений. Текущее максимально допустимое значение: {}，" +
+                    "Только половине максимального количества глобальных подключений в учетной записи будет разрешен доступ в течение следующего часа.", currentMaxConnection);
             return true;
         }
         return false;
@@ -268,7 +265,7 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
     private ProxyAccountWrapper getProxyAccount() {
         ProxyAccountWrapper proxyAccount = proxyAccountService.getProxyAccount(accountNo, host);
         if (proxyAccount == null) {
-            log.warn("获取不到账号。。。");
+            log.warn("Невозможно получить аккаунт...");
             //ReferenceCountUtil.release(handshakeByteBuf);
             //  closeOnFlush(ctx.channel());
             return null;
@@ -278,7 +275,7 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * 为channel 增加对应的TrafficController
+     * Добавьте соответствующий TrafficController в канал
      *
      * @param ctx          ChannelHandlerContext
      * @param proxyAccount ProxyAccount
@@ -286,16 +283,16 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
     private void attachTrafficController(ChannelHandlerContext ctx, ProxyAccountWrapper proxyAccount) {
         Long readLimit = proxyAccount.getUpTrafficLimit() * 1000;
         Long writeLimit = proxyAccount.getDownTrafficLimit() * 1000;
-        //触发最大连接数，惩罚性减低连接数1小时
-        //加入流量控制
-        //保持对全局的控制，不修改key
+        //Запускаем максимальное количество подключений и штрафно уменьшаем количество подключений на 1 час
+         //Добавляем управление потоком
+         //Сохранять глобальный контроль и не изменять ключ
         GlobalTrafficShapingHandler orSetGroupGlobalTrafficShapingHandler = TrafficControllerCache.putIfAbsent(getAccountId(), ctx.executor(), readLimit, writeLimit);
-        //因为没有fireChannel
+        //Потому что нет fireChannel
         ctx.pipeline().addFirst(orSetGroupGlobalTrafficShapingHandler);
     }
 
     /**
-     * 发送握手数据，并且提升为ws协议
+     * Отправьте данные рукопожатия и обновите протокол ws
      */
     private void sendNewPackageToClient(ChannelHandlerContext ctx, final ByteBuf handshakeByteBuf, Channel inboundChannel, ProxyAccount proxyAccount) {
         Bootstrap client = NettyClientFactory.getClient(inboundChannel.eventLoop());
@@ -368,12 +365,12 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * 获取host头信息
+     * Получить информацию заголовка хоста
      */
     private void getHost(String[] headRows) {
 
         for (String head : headRows) {
-            // :空格
+            // :космос
             String[] headKV = head.split(": ");
             if (headKV.length != 2) continue;
             if (headKV[0].trim().toUpperCase().equals(HOST)) {
@@ -384,12 +381,12 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
             }
         }
 
-        if (host == null) throw new NullPointerException("获取不到host信息");
+        if (host == null) throw new NullPointerException("Невозможно получить информацию о хосте");
     }
 
     private void checkToken(String requestToken) throws IllegalAccessException {
         String token = V2RayPathEncoder.encoder(accountNo, host, proxyConstant.getAuthPassword());
-        if (!requestToken.equals(token)) throw new IllegalAccessException("非法访问,token检测不通过");
+        if (!requestToken.equals(token)) throw new IllegalAccessException("Недопустимый доступ, проверка токена не прошла.");
     }
 
     private String getAccountId() {
@@ -413,7 +410,7 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
     private void reportConnectionLimit() {
 
         if (ConnectionStatsCache.canReport(accountNo)) {
-            //连接限制警告
+            //Предупреждение о ограничении соединений.
             TaskConnectionLimitDelayedTask reportConnectionLimitTask =
                     new TaskConnectionLimitDelayedTask(ConnectionLimit.builder().accountNo(accountNo).build());
             TaskService.addTask(reportConnectionLimitTask);
@@ -422,7 +419,7 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
 
 
     /**
-     * 分段上传流量
+     * Поступление трафика по частям.
      */
     private void reportFlowStat() {
 
@@ -438,7 +435,7 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
                     reportFlowStat(writtenBytes, readBytes);
                     //重置
                     trafficCounter.resetCumulativeTime();
-                    log.info("账号:{},连接超过5分钟.上传分段流量统计数据:{}B", getAccountId(), writtenBytes + readBytes);
+                    log.info("Аккаунт: {}, соединение превышает 5 минут. Загрузка статистики данных по сегментам трафика:{}B", getAccountId(), writtenBytes + readBytes);
                 }
 
             }
@@ -472,16 +469,4 @@ public class DispatcherHandler extends ChannelInboundHandlerAdapter {
     }
 
 
-   /* public String convertByteBufToString(ByteBuf buf) {
-
-        String str;
-        if (buf.hasArray()) { // 处理堆缓冲区
-            str = new String(buf.array(), buf.arrayOffset() + buf.readerIndex(), buf.readableBytes());
-        } else { // 处理直接缓冲区以及复合缓冲区
-            byte[] bytes = new byte[buf.readableBytes()];
-            buf.getBytes(buf.readerIndex(), bytes);
-            str = new String(bytes, 0, buf.readableBytes());
-        }
-        return str;
-    }*/
 }

@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Table(name = "t_transaction")
 public class TransactionVO extends BaseEntityVO implements Serializable {
 
-    //交易的类型是 现金 还是通过套餐码
+    //Тип операции: наличные или с использованием кода пакета
     private Integer transType;
 
     private Integer transStatus;

@@ -10,7 +10,9 @@ logging:
   level:
     root: info
 manager:
-  #如果admin端不在本机需要修改
+  #Если административная панель (admin) не находится на локальной машине,
+  # вам может потребоваться внести изменения в настройки, чтобы указать правильный
+  # IP-адрес или доменное имя, где находится административная панель.
   address: http://127.0.0.1:9091
   getProxyAccountUrl: ${manager.address}/proxy/proxyAccount/ac?accountNo={accountNo}&domain={domain}
   reportFlowUrl: ${manager.address}/report/flowStat

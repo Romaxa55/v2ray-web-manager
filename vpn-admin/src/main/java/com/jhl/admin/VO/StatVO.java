@@ -15,11 +15,11 @@ import java.util.Date;
 public class StatVO extends BaseEntityVO implements Serializable {
 
     private Integer accountId;
-    //结算周期
+    //Цикл расчета
     private Date fromDate;
 
     private Date toDate;
-    //流量 最大值 2^64 ,1T 等于 2^40
+    //Максимальное значение трафика - 2^64, что эквивалентно 1 Тб, равному 2^40.
     private Long flow;
 }
 

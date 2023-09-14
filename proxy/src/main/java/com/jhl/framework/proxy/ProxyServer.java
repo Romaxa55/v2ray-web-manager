@@ -47,17 +47,17 @@ public final class ProxyServer {
                     .option(ChannelOption.SO_REUSEADDR, true)
                     .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                     .childOption(ChannelOption.TCP_NODELAY, true)
-                    // TCP层：发送buf :32k
+                    //TCP уровень: буфер отправки размером 32 Кб
                     .childOption(ChannelOption.SO_SNDBUF, 32 * 1024)
-                    //TCP层 :接收BUF: 32k
+                    //Уровень TCP: буфер приема размером 32 Кб
                     .childOption(ChannelOption.SO_RCVBUF, 32 * 1024)
-                    //netty服务层缓存参数
+                    //Параметры кэширования на уровне сервиса Netty.
                     .childOption(ChannelOption.WRITE_BUFFER_WATER_MARK, WriteBufferWaterMark.DEFAULT)
-                    // 不保证优先转发
+                    // Нет гарантии приоритетной пересылки
                     .childOption(ChannelOption.IP_TOS, 0xB8);
             //
-            //作为中间件，不打开心跳，委派给真实的服务。
-            // 心跳 需要 传输层 keepalive+应用层 心跳检测
+            //В качестве промежуточного программного обеспечения контрольный сигнал не включается и не делегируется реальному сервису.
+            // Heartbeat требует поддержания активности на транспортном уровне + обнаружение пульса на уровне приложения.
             // .childOption(ChannelOption.SO_KEEPALIVE,true)
             //.childOption(NioChannelOption.of(StandardSocketOptions.SO_KEEPALIVE),true);
             // ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.ADVANCED);
@@ -85,11 +85,11 @@ public final class ProxyServer {
     public void preDestroy() throws InterruptedException {
         bossGroup.shutdownGracefully();
         workerGroup.shutdownGracefully().addListener(future -> {
-            log.warn("ReportService 已经关闭....");
+            log.warn("ReportService Закрыто...");
             TaskService.destroy();
         });
         workerGroup.awaitTermination(3, TimeUnit.SECONDS);
-        log.warn("netty 已经关闭....");
+        log.warn("netty Закрыто...");
 
 
     }

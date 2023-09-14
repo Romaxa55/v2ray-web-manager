@@ -11,9 +11,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * TrafficControllerService 提供流量控制，
- * 每个账号持有生命周期内全局的  {@link GlobalTrafficShapingHandler}
- * todo 分布式流量控制
+TrafficControllerService обеспечивает контроль за трафиком.
+Каждая учетная запись владеет глобальным {@link GlobalTrafficShapingHandler} на протяжении своего срока службы.
+Задача на будущее: распределенное управление трафиком.
  */
 @Slf4j
 public class TrafficControllerCache {
@@ -24,12 +24,12 @@ public class TrafficControllerCache {
 
 
     /**
-     * 为每个账号增加或者获取旧的 {@link GlobalTrafficShapingHandler}，
+     * Для каждой учетной записи добавляется или получается существующий {@link GlobalTrafficShapingHandler},
      *
      * @param accountId  accountId
-     * @param executor   可定时的线程池
-     * @param readLimit  读限制速度
-     * @param writeLimit 写限制速度
+     * @param executor   Пул потоков с возможностью установки периодических задач.
+     * @param readLimit  Ограничение скорости чтения.
+     * @param writeLimit Ограничение скорости записи.
      * @return GlobalTrafficShapingHandler
      */
     public static GlobalTrafficShapingHandler putIfAbsent(Object accountId, ScheduledExecutorService executor, Long readLimit, Long writeLimit) {
@@ -49,7 +49,7 @@ public class TrafficControllerCache {
 
 
     /**
-     * 应该获取锁，但是不必要
+     * Должен получать блокировку, но это необязательно.
      *
      * @param accountId id
      * @return GlobalTrafficShapingHandler

@@ -11,16 +11,16 @@ import java.io.Serializable;
 public class ProxyAccount implements Serializable {
     public static final  Long M = 1024 * 1024L;
     /**
-     * 账号ID,用于标识 连接属于谁
+     * ID учетной записи
      */
     private Integer accountId;
 
     /**
-     * 客户端访问的域名，校验
+     * Домен, к которому обращается клиент, проверяется.
      */
     private String host;
     /**
-     * 用于v2ray path的使用
+     * Используется для маршрутизации V2Ray.
      */
     private String accountNo;
     /**
@@ -30,8 +30,8 @@ public class ProxyAccount implements Serializable {
     private String id;
     /**
      * "alterId": 32
-     * 兼用新版 alterId 0
-     * alterID 是 v2ray 的一个安全特性，用于防止被识别和干扰。但是在最新的 v2ray 版本中，已经引入了更先进的安全机制，所以不再需要 alterID 了。
+     * Совместимо с новой версией alterId 0.
+     * AlterID - это функция безопасности в v2ray, предназначенная для предотвращения распознавания и вмешательства. Однако в последних версиях v2ray был внедрен более современный механизм безопасности, и теперь alterID уже не требуется.
      */
     private Integer alterId = 64;
     /**
@@ -48,7 +48,7 @@ public class ProxyAccount implements Serializable {
     private Long downTrafficLimit = 1 * M;
 
     /**
-     * 最大连接数
+     * Максимальное количество подключений
      */
     private Integer maxConnection = 30;
 
@@ -56,7 +56,7 @@ public class ProxyAccount implements Serializable {
     private int v2rayPort = 6001;
     private int v2rayManagerPort = 62789;
     /**
-     * 代理中间件的ip
+     * IP прокси-сервера
      */
     private  String proxyIp;
 

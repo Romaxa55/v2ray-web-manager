@@ -10,12 +10,12 @@ import java.util.Date;
 @Data
 public class GenerateInviteCodeVO implements Serializable {
     /**
-     * 数量
+     * Количество
      */
-    @Range(min = 1,max = 100,message = "生成邀请码数量需要在[1,100]之间")
+    @Range(min = 1,max = 100,message = "Количество сгенерированных пригласительных кодов должно быть в диапазоне от 1 до 100.")
     Integer quantity;
     /**
-     * 有效时间
+     * Срок действия
      */
     @NotNull
     private Date effectiveTime;

@@ -27,7 +27,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         String authPassword = DigestUtils.md5Hex(proxyConstant.getAuthPassword());
         String reqAuthPassword = request.getHeader(AUTH_NAME);
         if (!StringUtils.hasLength(reqAuthPassword) || !authPassword.equals(reqAuthPassword)) {
-            Result result = Result.builder().code(401).message("认证失败").build();
+            Result result = Result.builder().code(401).message("Ошибка аутентификации").build();
             response.setHeader("content-type", "application/json;charset=UTF-8");
             response.getOutputStream().write(JSON.toJSONBytes(result));
             return false;

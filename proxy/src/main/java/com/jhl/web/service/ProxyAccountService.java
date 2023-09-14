@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * 运行时保持
+ * Сохранение во время выполнения
  */
 @Slf4j
 @Component
@@ -35,14 +35,14 @@ public class ProxyAccountService {
 
     private static final Short BEGIN_BLOCK = 3;
     /**
-     * 缓存 ProxyAccount
-     * key:getKey(accountNo, host)
-     * value: ProxyAccount
+     * Кэширование ProxyAccount
+     * ключ: getKey(accountNo, host)
+     * значение: ProxyAccount
      */
     public final  static Integer ACCOUNT_EXPIRE_TIME = 60;
     private final Cache<String, ProxyAccountWrapper> PA_MAP = CacheBuilder.newBuilder().maximumSize(1000).expireAfterWrite(ACCOUNT_EXPIRE_TIME, TimeUnit.MINUTES).build();
     /**
-     * 屏蔽无限刷admin端
+     * Предотвращение бесконечного запроса к административному интерфейсу
      */
     private final Cache<String, AtomicInteger> REQUEST_ERROR_COUNT = CacheBuilder.newBuilder().maximumSize(1000).expireAfterWrite(2, TimeUnit.MINUTES).build();
 
@@ -54,9 +54,8 @@ public class ProxyAccountService {
     }
 
     /**
-     * 如何缓存没有需要获得账号基本的锁，然后向远程请求数据。
+     * Если кэш пуст, необходимо получить блокировку аккаунта, затем запросить данные удаленно.
      *
-
      */
     public ProxyAccountWrapper getProxyAccount(String accountNo, String host) {
         ProxyAccountWrapper proxyAccount = PA_MAP.getIfPresent(getKey(accountNo, host));
@@ -67,10 +66,10 @@ public class ProxyAccountService {
             synchronized (SynchronousPoolUtils.getWeakReference(getKey(accountNo, host + ":getRemotePAccount"))) {
                 proxyAccount = PA_MAP.getIfPresent(getKey(accountNo, host));
                 if (proxyAccount != null) return proxyAccount;
-                //远程请求，获取信息
+                // Удаленный запрос для получения информации
                 proxyAccount = getRemotePAccount(accountNo, host);
                 if (proxyAccount != null) proxyAccount.setVersion(System.currentTimeMillis());
-                //如果获取不到账号，增加错误次数
+                // Если аккаунт не может быть получен, увеличьте количество ошибок
                 if (proxyAccount == null) {
                     AtomicInteger counter = REQUEST_ERROR_COUNT.getIfPresent(accountNo);
                     if (counter != null) {
@@ -81,17 +80,17 @@ public class ProxyAccountService {
                 } else {
                     addOrUpdate(proxyAccount);
                     try {
-                        //确保存在账号
+                        // Убедитесь, что аккаунт существует
                         v2rayService.addProxyAccount(proxyAccount.getV2rayHost(), proxyAccount.getV2rayManagerPort(), proxyAccount);
                     } catch (Exception e) {
-                        log.warn("增加失败:{}", e.getLocalizedMessage());
+                        log.warn("Добавление не удалось:{}", e.getLocalizedMessage());
                     }
 
 
                 }
             }
         }
-        if (reqCount >= BEGIN_BLOCK) log.info("阻止远程请求:{}", accountNo);
+        if (reqCount >= BEGIN_BLOCK) log.info("Предотвращение удаленного запроса:{}", accountNo);
 
 
         return proxyAccount;
@@ -104,7 +103,7 @@ public class ProxyAccountService {
         ResponseEntity<Result> entity = restTemplate.getForEntity(managerConstant.getGetProxyAccountUrl(),
                 Result.class, kvMap);
         if (!entity.getStatusCode().is2xxSuccessful()) {
-            log.error("获取pAccount 错误:{}", entity);
+            log.error("Ошибка getRemotePAccount:{}", entity);
             return null;
         }
         Result result = entity.getBody();
@@ -142,7 +141,7 @@ public class ProxyAccountService {
 
 
         } finally {
-            //移除cache
+            // Удаление кэша
             if (result) rmProxyAccountCache(accountNo, host);
         }
         return result;

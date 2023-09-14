@@ -12,10 +12,10 @@ import org.springframework.util.Assert;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 提供账号连接数支持
+ * Предоставление поддержки для подсчета соединений аккаунта.
  * <p>
- * 全局异步同步数据。 最大程度保证正确，允许脏读。
- * 仅保证最终一致性
+ * Глобальная асинхронная синхронизация данных. Максимальное соблюдение корректности, допускаются несогласованные чтения.
+ * Гарантируется только окончательная согласованность
  */
 @Slf4j
 public class ConnectionStatsCache {
@@ -28,13 +28,13 @@ public class ConnectionStatsCache {
 
     public static void incr(String accountId, String host) {
         Assert.notNull(accountId, "accountId must not be null");
-        //存在
+        //Присутствует
         AccountConnectionStat accountConnectionStat = ACCOUNT_CONNECTION_COUNT_STATS.getIfPresent(accountId);
         if (accountConnectionStat != null) {
             accountConnectionStat.addAndGet(1, host);
             return;
         }
-        //不存在
+        //Не существует.
         synchronized (SynchronousPoolUtils.getWeakReference(accountId + ":connection:" + host)) {
 
             accountConnectionStat = ACCOUNT_CONNECTION_COUNT_STATS.getIfPresent(accountId);
@@ -108,7 +108,7 @@ public class ConnectionStatsCache {
             AccountConnectionStat connectionCounter = ACCOUNT_CONNECTION_COUNT_STATS.getIfPresent(accountId);
             if (connectionCounter != null) {
                 long interruptionTime = connectionCounter.getInterruptionTime();
-                //操作一个小时后，可以继续执行上报
+                //Через час после операции можно продолжить выполнение отчета.
                 //interruptionTime =0 ok
                 // interruptionTime !=0 ok
                 if ((System.currentTimeMillis() - interruptionTime) > _1HOUR_MS) {
@@ -121,7 +121,7 @@ public class ConnectionStatsCache {
     }
 
     /**
-     * 更新 全局连接数
+     * Обновление глобального количества соединений.
      *
 
      */
@@ -129,7 +129,7 @@ public class ConnectionStatsCache {
         AccountConnectionStat connectionCounter = ACCOUNT_CONNECTION_COUNT_STATS.getIfPresent(accountNo);
         if (connectionCounter != null) {
             connectionCounter.updateRemoteConnectionNum(count);
-            //全局控制
+            //Глобальное управление.
             if (interruptionTime > 0) connectionCounter.setInterruptionTime(interruptionTime);
         }else{
             throw  new NullPointerException("AccountConnectionStat is null");
@@ -138,7 +138,7 @@ public class ConnectionStatsCache {
     }
 
     /**
-     * 上报当前账号在这台服务器的连接数
+     * Сообщить текущее количество соединений для этой учетной записи на этом сервере.
      */
     private final static long _30S = 30_000;
 
@@ -159,7 +159,7 @@ public class ConnectionStatsCache {
             //更新上报
             connectionCounter.setLastReportNum(internalConnectionCount);
             connectionCounter.setLastReportTime(System.currentTimeMillis());
-            log.debug("上报提交任务。。。");
+            log.debug("Сообщить о выполненной задаче...");
         }
     }
 }

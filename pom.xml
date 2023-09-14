@@ -8,18 +8,18 @@
     <packaging>pom</packaging>
     <modelVersion>4.0.0</modelVersion>
     <scm>
-    <url>https://github.com/master-coder-ll/v2ray-web-manager</url>
+    <url>https://github.com/romaxa55/v2ray-web-manager</url>
     <connection>
-        scm:git:https://github.com/master-coder-ll/v2ray-web-manager.git
+        scm:git:https://github.com/romaxa55/v2ray-web-manager.git
     </connection>
     <developerConnection>
-        scm:git:ssh://git@github.com/master-coder-ll/v2ray-web-manager.git
+        scm:git:ssh://git@github.com/romaxa55/v2ray-web-manager.git
     </developerConnection>
     <tag>v3.1.11</tag>
 </scm>
     <developers>
     <developer>
-        <name>master-coder-ll</name>
+        <name>romaxa55</name>
         <email />
     </developer>
     </developers>
