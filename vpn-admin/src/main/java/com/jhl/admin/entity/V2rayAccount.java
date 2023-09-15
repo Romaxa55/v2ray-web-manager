@@ -28,9 +28,9 @@ public class V2rayAccount {
     private String v = "2";
     private String ps = "";
     //地址
-    private String add="127.0.0.1";
-    private String port="80";
-    private String id="kxsw";
+    private String add;
+    private String port;
+    private String id;
     private String aid = "0";
     private String net = "ws";
     private String type = "none";

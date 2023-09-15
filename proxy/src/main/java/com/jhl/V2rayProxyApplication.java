@@ -1,5 +1,6 @@
 package com.jhl;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,4 +28,6 @@ public class V2rayProxyApplication {
         // Необходимо принимать args, иначе не будет загружена пользовательская конфигурация
         SpringApplication.run(V2rayProxyApplication.class, args);
     }
+
+
 }

@@ -27,7 +27,7 @@ email:
 
 
 logging:
-  file: /opt/jar/logs/admin.log
+  file: conf/admin.log
   file.max-history: 7
   level:
     root: info
@@ -45,7 +45,7 @@ spring:
       minimum-idle: 2
     password: ''
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:sqlite:/opt/jar/db/admin.db
+    url: jdbc:sqlite:conf/admin.db
     username: ''
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss

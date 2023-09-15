@@ -5,17 +5,16 @@ import com.jhl.admin.constant.ProxyConstant;
 import com.jhl.admin.entity.V2rayAccount;
 import com.jhl.admin.model.Account;
 import com.jhl.admin.model.Server;
-import com.jhl.admin.model.Stat;
 import com.jhl.admin.repository.AccountRepository;
-import com.jhl.admin.service.StatService;
-import com.jhl.admin.util.Utils;
 import com.ljh.common.utils.V2RayPathEncoder;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class V2rayAccountService {
@@ -23,36 +22,13 @@ public class V2rayAccountService {
     ProxyConstant proxyConstant;
     @Autowired
     AccountRepository accountRepository;
-    @Autowired
-    StatService statService;
 
     public String buildB64V2rayAccount(List<Server> servers, Account account) {
         StringBuilder sb = new StringBuilder();
-        Base64.Encoder encoder = Base64.getEncoder();
-        // tip
-        if (new Date().getTime()>account.getToDate().getTime()){
-            V2rayAccount alertMessage = new V2rayAccount();
-            alertMessage.setPs("通知-账号已经过期，请联系管理员:"+Utils.toDateStr(account.getToDate(),null));
-            sb.append("vmess://").append(encoder.encodeToString(JSON.toJSONString(alertMessage).getBytes(StandardCharsets.UTF_8))).append("\n");
-            return  sb.toString();
-        }
-
-
         for (V2rayAccount v2rayAccount : buildV2rayAccount(servers, account)) {
-            String encode = encoder.encodeToString(JSON.toJSONString(v2rayAccount).getBytes(StandardCharsets.UTF_8));
+            String encode = Base64.getEncoder().encodeToString(JSON.toJSONString(v2rayAccount).getBytes(StandardCharsets.UTF_8));
             sb.append("vmess://").append(encode).append("\n");
         }
-
-        // tip 流量 和 有效期
-        V2rayAccount tip = new V2rayAccount();
-        tip.setAdd("127.0.0.2");
-        Stat stat = statService.createOrGetStat(account);
-        tip.setPs("通知-流量:"+stat.getFlow()/1024/1024/1024+"/"+account.getBandwidth()+"G;流量重置时间:"+Utils.toDateStr(stat.getToDate(),"yyyy-MM-dd HH时"));
-        V2rayAccount tip2 = new V2rayAccount();
-        tip2.setPs("通知-账号有效期至:"+ Utils.toDateStr(account.getToDate(),null));
-        tip2.setAdd("127.0.0.3");
-        sb.append("vmess://").append(encoder.encodeToString(JSON.toJSONString(tip).getBytes(StandardCharsets.UTF_8))).append("\n");
-        sb.append("vmess://").append(encoder.encodeToString(JSON.toJSONString(tip2).getBytes(StandardCharsets.UTF_8))).append("\n");
 
         return sb.toString();
     }
