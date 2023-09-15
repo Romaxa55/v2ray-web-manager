@@ -6,9 +6,9 @@ import lombok.Getter;
 public enum WebsiteConfigEnum {
 
 
-    IS_NEED_INVITE_CODE("需要邀请码才能注册吗？", "IS_NEED_INVITE_CODE", "false","config"),
-    VIP_CAN_INVITE("用户能邀请其他人注册吗？", "VIP_CAN_INVITE", "false","config"),
-    SUBSCRIPTION_ADDRESS_PREFIX("订阅地址访问前缀","SUBSCRIPTION_ADDRESS_PREFIX","http://127.0.0.1/api","config");
+    IS_NEED_INVITE_CODE("Нужен ли мне код приглашения для регистрации？", "IS_NEED_INVITE_CODE", "false","config"),
+    VIP_CAN_INVITE("Могут ли пользователи приглашать других зарегистрироваться?？", "VIP_CAN_INVITE", "false","config"),
+    SUBSCRIPTION_ADDRESS_PREFIX("Префикс доступа к адресу подписки","SUBSCRIPTION_ADDRESS_PREFIX","http://127.0.0.1/api","config");
     private String name;
 
     private String key;
