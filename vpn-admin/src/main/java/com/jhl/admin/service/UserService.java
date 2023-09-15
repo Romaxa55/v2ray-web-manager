@@ -35,7 +35,7 @@ public class UserService {
     public void reg(User user) {
         Validator.isNotNull(user);
         if (!emailService.verifyCode(user.getEmail(), user.getVCode())) {
-            throw new IllegalArgumentException("验证码错误");
+            throw new IllegalArgumentException("Ошибка кода подтверждения");
         }
 
         adminReg(user);
@@ -44,7 +44,7 @@ public class UserService {
     public void adminReg(User user) {
         User exist = userRepository.findOne(Example.of(User.builder().email(user.getEmail()).build())).orElse(null);
         if (exist != null) {
-            throw new RuntimeException("已经存在账号，如忘记密码请找回");
+            throw new RuntimeException("Аккаунт уже существует. Если вы забыли свой пароль, восстановите его.");
         }
         create(user);
         Account account = Account.builder().userId(user.getId()).build();
@@ -55,25 +55,25 @@ public class UserService {
     public void changePassword(User user) {
         Validator.isNotNull(user);
         if (!emailService.verifyCode(user.getEmail(), user.getVCode())) {
-            throw new IllegalArgumentException("验证码错误");
+            throw new IllegalArgumentException("Ошибка кода подтверждения");
         }
         User dbUser = userRepository.findOne(Example.of(User.builder().email(user.getEmail()).build())).orElse(null);
         Validator.isNotNull(user.getPassword());
         if (dbUser == null) {
-            throw new NullPointerException("用户不存在");
+            throw new NullPointerException("Пользователь не существует");
         }
         User newUser = User.builder().password(encodePassword(user.getPassword()))
                 .build();
         newUser.setId(dbUser.getId());
         userRepository.save(newUser);
-        //删除访问限制
+        //Снять ограничения доступа
         defendBruteForceAttackUser.rmCache(user.getEmail());
     }
 
     /**
      * @param userId
-     * @param oldPw  旧密码
-     * @param newPw  新你们
+     * @param oldPw  Старый пароль
+     * @param newPw  Новый пароль
      */
     public void changePassword(Integer userId, String oldPw, String newPw) {
         Validator.isNotNull(userId);
@@ -81,11 +81,11 @@ public class UserService {
         Validator.isNotNull(newPw);
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
-            throw new NullPointerException("用户不存在");
+            throw new NullPointerException("Пользователь не существует");
         }
         String password = user.getPassword();
 
-        if (!encodePassword(oldPw).equals(password)) throw new RuntimeException("旧密码不正确");
+        if (!encodePassword(oldPw).equals(password)) throw new RuntimeException("Старый пароль неверен");
         user.setPassword(encodePassword(newPw));
         userRepository.save(user);
     }
@@ -101,11 +101,11 @@ public class UserService {
     public User login(UserVO user) {
         Validator.isNotNull(user);
         String email = user.getEmail();
-        Validator.isNotNull(email, "email为空");
+        Validator.isNotNull(email, "Email пуст");
         String password = user.getPassword();
-        Validator.isNotNull(password, "密码为空");
+        Validator.isNotNull(password, "Пароль пуст");
         AtomicInteger tryCount = defendBruteForceAttackUser.getCache(email);
-        if (tryCount != null && tryCount.get() > 4) throw new RuntimeException("为了你的安全，账号已经被锁定，请在一个小时后重试/或者修改密码");
+        if (tryCount != null && tryCount.get() > 4) throw new RuntimeException("В целях вашей безопасности ваш аккаунт заблокирован. Повторите попытку через час или смените пароль.");
 
 
         Example<User> userExample = Example.of(User.builder().email(StringUtils.trim(email))
@@ -120,9 +120,9 @@ public class UserService {
             } else {
                 tryCount.addAndGet(1);
             }
-            throw new IllegalArgumentException("账号/密码错误");
+            throw new IllegalArgumentException("Ошибка учетной записи/пароля");
         }
-        if (dbUser.getStatus() != 1) throw new RuntimeException("账号已经禁用");
+        if (dbUser.getStatus() != 1) throw new RuntimeException("Аккаунт отключен");
         dbUser.setPassword(null);
         defendBruteForceAttackUser.rmCache(email);
         return dbUser;
