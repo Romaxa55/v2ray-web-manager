@@ -68,7 +68,7 @@ public class ServerController {
 
         UserVO user = userCache.getCache(auth);
         List<AccountVO> accounts = accountService.getAccounts(user.getId());
-        if (accounts.size() != 1) return Result.builder().code(500).message("用户存在多个账号/或者账号为空").build();
+        if (accounts.size() != 1) return Result.builder().code(500).message("У пользователя несколько учетных записей/или учетная запись пуста").build();
         AccountVO account = accounts.get(0);
         Short level = account.getLevel();
         List<Server> servers = serverService.listByLevel(level);
@@ -89,7 +89,7 @@ public class ServerController {
     }
 
     /**
-     * 新增
+     * Новый
      *
      * @return
      */
@@ -103,7 +103,7 @@ public class ServerController {
     }
 
     /**
-     * 修改
+     * Исправлять
      */
     @PreAuth("admin")
     @ResponseBody
@@ -114,7 +114,7 @@ public class ServerController {
 
        serverService.update(server);
 
-        //todo 修改服务器后的逻辑 1.更新账号2.推送到中间件
+        //todo Логика после изменения сервера 1. Обновить учетную запись 2. Отправить на промежуточное программное обеспечение
         return Result.builder().code(Result.CODE_SUCCESS).build();
     }
 }

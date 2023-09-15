@@ -25,7 +25,7 @@ public class SubscriptionController {
     @Autowired
     SubscriptionService subscriptionService;
     /**
-     * 防暴力，防中间人篡改
+     * Борьба с насилием и вмешательством посредников
      * @param code code
      * @param type 订阅类型0通用,1....预留
      * @param  token  md5(code+timestamp+api.auth)
@@ -34,11 +34,11 @@ public class SubscriptionController {
 
     @RequestMapping(value = "/subscribe/{code}")
     public void subscribe(@PathVariable String code, Integer type, Long timestamp, String token, HttpServletResponse response) throws IOException {
-         if (code==null||type==null ||  timestamp==null || token ==null)  throw  new NullPointerException("参数错误");
+         if (code==null||type==null ||  timestamp==null || token ==null)  throw  new NullPointerException("Ошибка параметра");
 
          StringBuilder stringBuilder= new StringBuilder();
         StringBuilder tokenSrc = stringBuilder.append(code).append(timestamp).append(proxyConstant.getAuthPassword());
-        if (!DigestUtils.md5Hex(tokenSrc.toString()).equals(token)) throw  new RuntimeException("认证失败");
+        if (!DigestUtils.md5Hex(tokenSrc.toString()).equals(token)) throw  new RuntimeException("Аутентификация не удалась");
 
         String result = subscriptionService.subscribe(code);
         byte[] bytes = result.getBytes();

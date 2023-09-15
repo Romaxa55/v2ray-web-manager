@@ -99,25 +99,25 @@ public class UserController {
      */
     @GetMapping("/send-email")
     public Result getVCode(String email, String type, String inviteCode) {
-        if (type == null) throw new NullPointerException("发送邮件类型类型为空");
+        if (type == null) throw new NullPointerException("Тип отправки электронной почты пуст.");
         boolean isNeedInviteCode = checkIsNeedInviteCode();
-        //邀请码
+        //Код приглашения
         if (isNeedInviteCode && type.equals("reg")) {
-            if (StringUtils.isBlank(inviteCode)) throw new NullPointerException("邀请码不能为空");
+            if (StringUtils.isBlank(inviteCode)) throw new NullPointerException("Пригласительный код не может быть пустым");
             InvitationCode invitationCode = invitationCodeRepository.findOne(Example.of(InvitationCode.builder().inviteCode(inviteCode.trim()).status(0).build())).orElse(null);
-            if (invitationCode == null) throw new NullPointerException("邀请码不正确/已使用");
-            //已经过有效期
+            if (invitationCode == null) throw new NullPointerException("Код приглашения неверен/уже использован.");
+            //Срок действия истек
             if (invitationCode.getEffectiveTime() != null && invitationCode.getEffectiveTime().before(new Date())){
-                throw  new IllegalArgumentException("邀请码已经过期");
+                throw  new IllegalArgumentException("Срок действия кода приглашения истек");
             }
         }
         UserVO userVO = userService.getOne(User.builder().email(email).build());
         if (type.equals("reg")) {
-            if (userVO != null) throw new NullPointerException("用户已经存在");
+            if (userVO != null) throw new NullPointerException("Пользователь уже существует");
         } else if (type.equals("forgot")) {
-            if (userVO == null) throw new RuntimeException("用户不存在");
+            if (userVO == null) throw new RuntimeException("Пользователь не существует");
         } else {
-            throw new UnsupportedOperationException("不支持的类型");
+            throw new UnsupportedOperationException("Неподдерживаемый тип");
 
         }
         emailService.sendVCode(email);
@@ -131,13 +131,13 @@ public class UserController {
         boolean isNeedInviteCode = checkIsNeedInviteCode();
         if (isNeedInviteCode) {
             String inviteCode = userVO.getInviteCode();
-            if (StringUtils.isBlank(inviteCode)) throw new NullPointerException("邀请码不能为空");
+            if (StringUtils.isBlank(inviteCode)) throw new NullPointerException("Пригласительный код не может быть пустым");
             invitationCode = invitationCodeRepository.findOne(Example.of(InvitationCode.builder().inviteCode(inviteCode.trim()).status(0).build())).orElse(null);
-            if (invitationCode == null) throw new NullPointerException("邀请码不正确/已使用");
+            if (invitationCode == null) throw new NullPointerException("Код приглашения неверен/уже использован.");
             final Date effectiveTime = invitationCode.getEffectiveTime();
-            //已经过有效期
+            //Срок действия истек
             if (effectiveTime != null && effectiveTime.before(new Date())){
-                throw  new IllegalArgumentException("邀请码已经过期");
+                throw  new IllegalArgumentException("Срок действия кода приглашения истек");
             }
         }
 
@@ -166,13 +166,13 @@ public class UserController {
     }
 
     /**
-     * 使用原密码修改密码
+     * Изменить пароль, используя исходный пароль
      * @return
      */
     @PreAuth("vip")
     @PostMapping("/change-password")
     public Result changePassword(@RequestBody ChangePasswordVO changePasswordVO ,@CookieValue(value = COOKIE_NAME, defaultValue = "") String auth) {
-        Assert.notNull(changePasswordVO, "参数不能为空");
+        Assert.notNull(changePasswordVO, "Параметр не может быть пустым");
         UserVO user = userCache.getCache(auth);
         Integer id = user.getId();
         userService.changePassword(id,changePasswordVO.getOldPassword(),changePasswordVO.getNewPassword());
@@ -188,13 +188,13 @@ public class UserController {
     // @PreAuth("vip")
     @GetMapping("/info")
     public Result getUserInfo(@CookieValue(value = COOKIE_NAME, defaultValue = "") String auth) {
-        if (StringUtils.isBlank(auth)) return Result.builder().code(403).message("无权限").build();
+        if (StringUtils.isBlank(auth)) return Result.builder().code(403).message("Нет разрешения").build();
         UserVO cache = userCache.getCache(auth);
-        if (cache == null) return Result.builder().code(403).message("认证已经过期，请重新登录").build();
+        if (cache == null) return Result.builder().code(403).message("Срок действия сертификата истек, пожалуйста, войдите снова").build();
         Map<String, Object> userMap = Maps.newHashMap();
         userMap.put("roles", Lists.newArrayList(cache.getRole()));
         userMap.put("name", cache.getEmail());
-        userMap.put("avatar", "https://apic.douyucdn.cn/upload/avanew/face/201705/15/17/109dae304969a8dc9dfd318c34cb71e9_middle.jpg");
+        userMap.put("avatar", "https://i.pravatar.cc/300");
         return Result.builder().code(Result.CODE_SUCCESS).obj(userMap).build();
     }
 

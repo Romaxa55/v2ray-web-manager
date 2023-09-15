@@ -23,7 +23,7 @@ public class ServerConfigController {
 
 
     /**
-     * 增加
+     * Увеличивать
      *
      * @return
      */
@@ -32,7 +32,7 @@ public class ServerConfigController {
     @PostMapping("/serverConfig")
     public Result addServerConfig(@RequestBody ServerConfigVO serverConfig) {
         if (serverConfig == null || StringUtils.isBlank(serverConfig.getKey()) || StringUtils.isBlank(serverConfig.getValue())) {
-            throw new NullPointerException("参数不能为空");
+            throw new NullPointerException("Параметр не может быть пустым");
 
         }
             serverConfig.setScope("config");
@@ -50,7 +50,7 @@ public class ServerConfigController {
     @ResponseBody
     @PutMapping("/serverConfig")
     public Result update(@RequestBody ServerConfigVO serverConfig) {
-        if (serverConfig == null || serverConfig.getId() == null) throw new NullPointerException("id 不能为空");
+        if (serverConfig == null || serverConfig.getId() == null) throw new NullPointerException("id не может быть пустым");
         return addServerConfig(serverConfig);
     }
 
@@ -79,7 +79,7 @@ public class ServerConfigController {
     @GetMapping("/serverConfig/{id}")
     public Result get(@PathVariable Integer id) {
 
-        if (id == null) throw new NullPointerException("id 不能为空");
+        if (id == null) throw new NullPointerException("id не может быть пустым");
         ServerConfig serverConfig = serverConfigRepository.findById(id).orElse(null);
         return Result.buildSuccess(serverConfig==null?null:serverConfig.toVO(ServerConfigVO.class), null);
     }
@@ -88,7 +88,7 @@ public class ServerConfigController {
     @ResponseBody
     @DeleteMapping("/serverConfig/{id}")
     public Result delete(@PathVariable Integer id) {
-        if (id == null) throw new NullPointerException("id 不能为空");
+        if (id == null) throw new NullPointerException("id не может быть пустым");
         serverConfigRepository.deleteById(id);
         return Result.doSuccess();
     }
