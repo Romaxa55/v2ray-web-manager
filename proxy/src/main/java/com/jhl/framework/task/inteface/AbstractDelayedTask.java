@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * Абстрактный класс задачи с отсрочкой. Представляет собой модель актера, где каждая задача отправляется через очередь.
  * Каждая задача внутри этой модели не имеет условий гонки.
  * Поддерживает повторное выполнение и бесконечное выполнение через метод setNextRunTime() {@link MonitorService#init()}.
- * Жизненный цикл следующий: beforeRun -> runTask -> done -> catchException.
+ * Жизненный цикл следующий: beforeRun &rarr; runTask &rarr; done &rarr; catchException.
  */
 @Slf4j
 public abstract class AbstractDelayedTask implements Delayed {
