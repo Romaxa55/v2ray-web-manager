@@ -15,7 +15,6 @@
     <developerConnection>
         scm:git:ssh://git@github.com/romaxa55/v2ray-web-manager.git
     </developerConnection>
-    <tag>v3.1.15</tag>
 </scm>
     <developers>
     <developer>
@@ -32,13 +31,6 @@
         <module>proxy</module>
         <module>common</module>
     </modules>
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub Maven Packages</name>
-            <url>https://maven.pkg.github.com/romaxa55/v2ray-web-manager</url>
-        </repository>
-    </distributionManagement>
     <build>
         <plugins>
             <plugin>
