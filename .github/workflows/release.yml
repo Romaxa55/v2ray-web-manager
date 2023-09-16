@@ -26,12 +26,19 @@ jobs:
           name: Package
           path: staging
           retention-days: 1
+
+      - uses: scottbrenner/generate-changelog-action@master
+        id: Changelog
+
       - uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: ${{ github.ref_name }}
           title: "${{ github.ref_name }}"
-          prerelease: false
+          body: |
+            ${{ steps.Changelog.outputs.changelog }}
           files: staging/*.jar
           draft: false
+          prerelease: false
+
 
