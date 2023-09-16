@@ -1,0 +1,28 @@
+on:
+  push:
+    tags:
+      - '*'
+
+name: Create GitHub Release
+
+jobs:
+  build:
+    name: GitHub Release Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - run: mkdir staging && cp ./**/target/*.jar staging
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Package
+          path: staging
+          retention-days: 1
+      - uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "${{ github.ref }}"
+          title: "Automated Build ${{ github.run_number }}"
+          prerelease: false
+          files: staging/*.jar

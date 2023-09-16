@@ -3,13 +3,12 @@ on:
     branches:
       - master
   workflow_dispatch:
-  
 
-name: Create Release
+name: Maven Release
 
 jobs:
   build:
-    name: Create Release
+    name: Maven Release Job
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -28,17 +27,3 @@ jobs:
         env:
           JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
           MVN_REPO_SERVERS: '[{"id": "github", "username": "git", "password": "${{ secrets.GITHUB_TOKEN }}"}]'
-
-      - run: mkdir staging && cp ./**/target/*.jar staging
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Package
-          path: staging
-          retention-days: 1
-      - uses: marvinpinto/action-automatic-releases@latest
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ github.run_number }}"
-          title: "Automated Build ${{ github.run_number }}"
-          prerelease: false
-          files: staging/*.jar
