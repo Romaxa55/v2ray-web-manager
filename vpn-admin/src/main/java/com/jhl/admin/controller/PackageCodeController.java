@@ -24,9 +24,9 @@ public class PackageCodeController {
     @ResponseBody
     @GetMapping("/package/code/generate")
     public Result generate(Integer packageId) {
-        if (packageId == null) throw new NullPointerException("packageId不能为空");
+        if (packageId == null) throw new NullPointerException("packageId не может быть пустым");
         Package aPackage = packageRepository.findById(packageId).orElse(null);
-        if (aPackage == null) throw new NullPointerException("package不存在");
+        if (aPackage == null) throw new NullPointerException("package не может быть пустым");
         PackageCode pc = new PackageCode();
         pc.setCode(Utils.getCharAndNum(10));
         pc.setStatus(0);
@@ -38,7 +38,7 @@ public class PackageCodeController {
     }
 
     /**
-     * 查询所有的PKcode
+     * Запросить все PKcodes
      * @param page
      * @param pageSize
      * @return
@@ -51,28 +51,28 @@ public class PackageCodeController {
         return Result.builder().code(Result.CODE_SUCCESS).obj(packageCodes).build();
     }
     /**
-     * 更新一个code
+     * Обновить код
      * @param packageCode
      * @return
      */
     @ResponseBody
     @PutMapping("/package/code")
     public Result update(@RequestBody PackageCode packageCode) {
-        if (packageCode == null || packageCode.getId() ==null) throw new NullPointerException("Id不能为空");
+        if (packageCode == null || packageCode.getId() ==null) throw new NullPointerException("Id не может быть пустым");
 
         packageCodeRepository.save(packageCode);
         return Result.doSuccess();
     }
 
     /**
-     * 作废一个pkcode
+     * Недействительный pkcode
      * @param id
      * @return
      */
     @ResponseBody
     @GetMapping("/package/code/invalid/{id}")
     public Result invalidCode(@PathVariable Integer id) {
-        if (id ==null) throw new NullPointerException("Id不能为空");
+        if (id ==null) throw new NullPointerException("Id не может быть пустым");
 
         PackageCode packageCode = new PackageCode();
          packageCode.setId(id);

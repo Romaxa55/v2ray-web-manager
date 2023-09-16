@@ -55,10 +55,10 @@ public class V2RayProxyEvent implements ProxyEvent {
                 ResponseEntity<Result> responseEntity = restTemplate.postForEntity(url + "/del", entity, Result.class);
                 Result result = responseEntity.getBody();
                 if (result!=null && result.getCode() != 200) {
-                    log.error("远程调用失败,事件：{},result:{}", getEvent(), result);
+                    log.error("Удаленный вызов не удался, событие：{},result:{}", getEvent(), result);
                 }
             } catch (Exception e) {
-                log.error("请求发生异常:{}", e.getLocalizedMessage());
+                log.error("В запросе произошло исключение:{}", e.getLocalizedMessage());
             }
 
         }
@@ -78,10 +78,10 @@ public class V2RayProxyEvent implements ProxyEvent {
                 ResponseEntity<Result> responseEntity = restTemplate.postForEntity(url, entity, Result.class);
                 Result result = responseEntity.getBody();
                 if (result!=null &&result.getCode() != 200) {
-                    log.error("远程调用失败,事件：{},result:{}", getEvent(), result);
+                    log.error("Удаленный вызов не удался, событие：{},result:{}", getEvent(), result);
                 }
             } catch (Exception e) {
-                log.error("请求发生异常:{}", e.getLocalizedMessage());
+                log.error("В запросе произошло исключение:{}", e.getLocalizedMessage());
             }
 
         }

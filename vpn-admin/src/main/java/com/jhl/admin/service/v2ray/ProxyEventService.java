@@ -72,7 +72,7 @@ public class ProxyEventService {
                     switch (event.getEvent()) {
                         case ADD_EVENT:
                         case UPDATE_EVENT:
-                            throw new UnsupportedOperationException("已经不在支持");
+                            throw new UnsupportedOperationException("Больше не поддерживается");
                         case RM_EVENT:
                             event.rmEvent();
                             break;
@@ -87,7 +87,7 @@ public class ProxyEventService {
                     break;
 
                 } catch (Exception e) {
-                    log.error("event 队列 抛出异常:", e);
+                    log.error("event очередь выдает исключение:", e);
                 }
             }
 

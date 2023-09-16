@@ -23,7 +23,7 @@ public class MessageReceiver extends BaseEntity implements Serializable {
     @ManyToOne
     private Message message;
     /**
-     * 已经接收？
+     * Уже получен?
      */
     private boolean received;
 

@@ -18,7 +18,7 @@ public class OrderVO extends BaseEntityVO implements Serializable {
     private String orderNo;
     private Integer packageId;
     private Integer price;
-    //过期时间
+    //Срок действия
     private Date  overdueDate;
     private Integer status;
 

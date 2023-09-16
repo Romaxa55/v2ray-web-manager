@@ -57,7 +57,7 @@ public class AppCron {
     @Scheduled(cron = "0 0 8 * * ?")
     //@Scheduled(fixedDelay = 60*1000)
     public void checkInvalidAccount() {
-        log.info("账号过期提醒任务。。开始，{}", new Date());
+        log.info("Задача по напоминанию об истечении срока действия учетной записи началась, {}", new Date());
         Date now = new Date();
         List<Account> accountList = accountRepository.findByToDateAfter(now);
         accountList.forEach(account -> {
@@ -74,10 +74,10 @@ public class AppCron {
                 String email = user.getEmail();
 
                 EmailEventHistory latestHistory = emailService.findLatestHistory(email, EmailEventEnum.CHECK_OVERDUE_TO_DATE.name());
-                //检测 事件的 unlock date 如果未到unlock date 跳过
+                //Определите дату разблокировки события. Если дата разблокировки не наступила, пропустите ее.
                 if (latestHistory != null && latestHistory.getUnlockDate().after(now)) return;
 
-                emailService.sendEmail(email, "提醒：账号即将到期",
+                emailService.sendEmail(email, "Напоминание: срок действия учетной записи скоро истечет.",
                         String.format(emailConstant.getOverdueDate(),sdf.format(toDate) ),
                         EmailEventHistory.builder().event(EmailEventEnum.CHECK_OVERDUE_TO_DATE.name())
                                 .email(email)

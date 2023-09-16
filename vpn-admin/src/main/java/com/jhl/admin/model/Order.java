@@ -22,7 +22,7 @@ public class Order extends BaseEntity implements Serializable {
     private String orderNo;
     private Integer packageId;
     private Integer price;
-    //过期时间
+    //Срок действия
     private Date  overdueDate;
     private Integer status;
 

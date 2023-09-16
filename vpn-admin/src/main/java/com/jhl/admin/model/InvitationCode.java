@@ -14,7 +14,7 @@ import java.util.Date;
 @Getter
 @Setter
 /**
- * 公告
+ * объявление
  */
 public class InvitationCode extends BaseEntity implements Serializable {
 
@@ -22,7 +22,7 @@ public class InvitationCode extends BaseEntity implements Serializable {
     private Integer regUserId;
     @Column(unique = true)
     private String  inviteCode;
-    //有效时间
+    //Эффективное время
     @Column()
     private Date effectiveTime;
     private  Integer status;

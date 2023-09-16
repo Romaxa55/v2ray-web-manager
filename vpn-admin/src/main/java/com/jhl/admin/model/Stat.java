@@ -17,11 +17,11 @@ import java.util.Date;
 public class Stat extends BaseEntity implements Serializable {
 
     private Integer accountId;
-    //结算周期
+    //платежный цикл
     private Date fromDate;
 
     private Date toDate;
-    //流量 最大值 2^64 ,1T 等于 2^40
+    //Максимальный расход 2^64, 1Т равен 2^40
     private Long flow;
 }
 

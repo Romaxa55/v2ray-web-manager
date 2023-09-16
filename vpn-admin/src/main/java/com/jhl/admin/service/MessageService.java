@@ -27,8 +27,8 @@ public class MessageService {
 
 
     /**
-     * @param message 消息实体
-     * @param userIds 消息接收者
+     * @param message объект сообщения
+     * @param userIds получатель сообщений
      */
     @Transactional
     public void addOrUpdate(Message message, List<Integer> userIds) {
@@ -46,7 +46,7 @@ public class MessageService {
     }
 
     /**
-     * 删除消息
+     * Удаленное сообщение
      *
      * @param messageId
      */
@@ -61,16 +61,6 @@ public class MessageService {
         }
     }
 
-
-  /*  public Page<Message> listBySender(Integer userId, Pageable pageable) {
-        Assert.notNull(userId);
-        User user = new User();
-        user.setId(userId);
-        Message message = Message.builder().user(user).build();
-        Page<Message> all = messageRepository.findAll(Example.of(message), pageable);
-        return all;
-    }
-*/
 
     public Page<MessageReceiver> listByReceiver(Integer userId, Pageable pageable) {
         Assert.notNull(userId);

@@ -87,7 +87,7 @@ public class AccountService {
     }
 
     /**
-     * 更新账号的信息，不涉及服务器相关/content相关
+     * Обновление информации об учетной записи, не связанное с сервером/контентом.
      */
     public void updateAccount(Account account) {
         Validator.isNotNull(account.getId());
@@ -96,9 +96,9 @@ public class AccountService {
 
         accountRepository.save(account);
         Account account1 = accountRepository.findById(account.getId()).orElse(null);
-        //判断是否需要生成新的stat
+        //Определите, нужно ли создавать новую статистику
         statService.createOrGetStat(accountRepository.getOne(account.getId()));
-        //删除事件
+        //удалить событие
             proxyEventService.addProxyEvent(
                     proxyEventService.buildV2RayProxyEvent(account1, ProxyEvent.RM_EVENT));
     }
@@ -108,50 +108,25 @@ public class AccountService {
         Integer id = account.getId();
         Account dbAccount = accountRepository.findById(id).orElse(null);
         if (dbAccount ==null|| dbAccount.getStatus() == 0 || !dbAccount.getToDate().after(new Date())) {
-            throw new IllegalStateException("账号不可用");
+            throw new IllegalStateException("Аккаунт недоступен");
         }
 
 
 
         Integer newServerId = account.getServerId();
         Server newServer = serverRepository.findById(newServerId).orElse(null);
-        if (newServer == null) throw new NullPointerException("服务器为空");
+        if (newServer == null) throw new NullPointerException("Сервер пуст");
 
-        /*V2rayAccount v2rayAccount = new V2rayAccount();
-        v2rayAccount.setId(uuid);
-        v2rayAccount.setAdd(newServer.getClientDomain());
-        v2rayAccount.setPort(String.valueOf(newServer.getClientPort()));
-        v2rayAccount.setPath(String.format(newServer.getWsPath(), dbAccount.getAccountNo()));
-        v2rayAccount.setTls(newServer.getSupportTLS() ? "tls" : "");
-        v2rayAccount.setHost("");
-        v2rayAccount.setPs(newServer.getDesc());*/
         List<V2rayAccount> v2rayAccounts = v2rayAccountService.buildV2rayAccount(Lists.newArrayList(newServer), dbAccount);
-        if (v2rayAccounts.size() != 1) throw new RuntimeException("数据不对");
+        if (v2rayAccounts.size() != 1) throw new RuntimeException("Данные неверны");
         account.setContent(JSON.toJSONString(v2rayAccounts.get(0)));
         accountRepository.save(account);
 
 
-       /*
-        String email = userService.get(dbAccount.getUserId()).getEmail();
-       //删除旧服务器账号
-        if (oldServerId != null) {
-            Server oldServer = serverRepository.getOne(oldServerId);
-              Account toSendAccount =new Account();
-            BeanUtils.copyProperties(dbAccount,toSendAccount);
-            V2RayProxyEvent rmEvent = new V2RayProxyEvent(restTemplate, oldServer,toSendAccount , email, ProxyEvent.RM_EVENT);
-            proxyEventService.addProxyEvent(rmEvent);
-        }
-
-
-        //同时也确保删除新服务器账号，好重新获取
-       Account newAccount = accountRepository.findById(id).orElse(null);
-        V2RayProxyEvent rmEvent = new V2RayProxyEvent(restTemplate, newServer,newAccount , email, ProxyEvent.RM_EVENT);
-        proxyEventService.addProxyEvent(rmEvent);*/
-
     }
 
     /**
-     * 获取一个用户下面的账号.并且填充
+     * Получите аккаунт под пользователем и заполните его
      *
      * @param userId
      * @return
@@ -175,7 +150,7 @@ public class AccountService {
 
 
         List<Account> accounts = accountRepository.findAll(Example.of(Account.builder().userId(userId).build()));
-        if (accounts.size() >1) throw new IllegalArgumentException("用户存在多个账号，请修复");
+        if (accounts.size() >1) throw new IllegalArgumentException("У пользователя несколько учетных записей, исправьте их.");
         return accounts.isEmpty()?null:accounts.get(0);
     }
     public void fillAccount(Date date, AccountVO account) {
@@ -192,7 +167,7 @@ public class AccountService {
      * https://xxx/subscribe/{code}?type=?&timestamp=?&token=?
      * <p>
      * code code
-     * type 订阅类型0通用,1....预留
+     * type Тип подписки 0 — общий, 1.... зарезервированный.
      * token  md5(code+timestamp+api.auth)
      *
      * @param accountId
@@ -225,17 +200,6 @@ public class AccountService {
         return account;
 
     }
-/*
-    public List<Account> listAllAccount(List<User> users) {
-        ArrayList<Account> allAccounts = Lists.newArrayList();
-        users.forEach(user -> {
-            List<Account> accounts = getAccounts(user.getId());
-            allAccounts.addAll(allAccounts);
-        });
-        return allAccounts;
-    }
-*/
-
 
     public static void main(String[] args) {
         System.out.println(UUID.randomUUID().toString());

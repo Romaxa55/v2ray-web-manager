@@ -14,7 +14,7 @@ public class ServerConfigService {
     @Autowired
     ServerConfigRepository serverConfigRepository;
 
-    //检测配置，并初始化
+    //Определить конфигурацию и инициализировать
     @PostConstruct
     public void init() {
         WebsiteConfigEnum[] values = WebsiteConfigEnum.values();

@@ -42,7 +42,7 @@ public class InvitationCodeController {
     UserService userService;
 
     /**
-     * 生成邀请码
+     * Создать код приглашения
      * @param  generateInviteCodeVO vo
      * @return
      */
@@ -52,20 +52,20 @@ public class InvitationCodeController {
     public Result generateInviteCode(@CookieValue(value = UserController.COOKIE_NAME, defaultValue = "") String auth,
                                      @RequestBody @Valid GenerateInviteCodeVO generateInviteCodeVO ) {
         UserVO user = userCache.getCache(auth);
-        if (auth == null || user==null) throw new NullPointerException("获取不到用户");
+        if (auth == null || user==null) throw new NullPointerException("Не могу получить пользователя");
       final Date effectiveTime = generateInviteCodeVO.getEffectiveTime();
         if ( effectiveTime==null  || effectiveTime.before(new Date())) throw new IllegalArgumentException("非法的有效时间:"+(effectiveTime==null?"null":effectiveTime.toString()));
 
         if (!user.getRole().equals("admin") && !serverConfigService.checkKey(WebsiteConfigEnum.VIP_CAN_INVITE.getKey())) {
-            throw new RuntimeException("管理员不允许用户邀请其他人");
+            throw new RuntimeException("Администраторы не разрешают пользователям приглашать других");
         }
       final Integer quantity = generateInviteCodeVO.getQuantity();
         Integer userId = user.getId();
-        //非管理员，不能生成多个邀请码
+        //Users не могут создавать несколько кодов приглашения.
         if(!user.getRole().equals("admin")){
-            if (quantity>1) throw new RuntimeException("存在未使用的邀请码。");
+            if (quantity>1) throw new RuntimeException("Есть неиспользованные коды приглашений。");
             long count = invitationCodeRepository.count(Example.of(InvitationCode.builder().generateUserId(userId).status(0).build()));
-            if (count > 0) throw new RuntimeException("存在未使用的邀请码。");
+            if (count > 0) throw new RuntimeException("Есть неиспользованные коды приглашений。");
         }
         //save
         List<InvitationCode> invitationCodeList = new ArrayList<>(quantity);
@@ -84,7 +84,7 @@ public class InvitationCodeController {
     @GetMapping("/invite-code")
     public Result listByUser(@CookieValue(value = UserController.COOKIE_NAME, defaultValue = "") String auth, Integer page, Integer pageSize) {
 
-        if (auth == null) throw new NullPointerException("获取不到用户");
+        if (auth == null) throw new NullPointerException("Не могу получить пользователя");
         UserVO user = userCache.getCache(auth);
         Integer userId = user.getId();
         Page<InvitationCode> codes = null;
@@ -107,7 +107,7 @@ public class InvitationCodeController {
             if (invitationCodeVO != null &&  !userMap.isEmpty() && code.getRegUserId()!=null) {
                  String email = userMap.get(code.getRegUserId()).getEmail();
                 final int indexOf = email.indexOf("@");
-                //非管理员脱敏处理
+                //Десенсибилизирующая терапия для лиц, не являющихся администраторами
                  if (indexOf>0  &&!user.getRole().equals("admin")){
                      final String theLastPartStr = email.substring(indexOf);
                        final char firstChar = email.charAt(0);
@@ -127,10 +127,10 @@ public class InvitationCodeController {
     @DeleteMapping("/invite-code/{codeId}")
     public Result delete(@CookieValue(value = UserController.COOKIE_NAME, defaultValue = "") String auth, @PathVariable Integer codeId) {
 
-        if (auth == null) throw new NullPointerException("获取不到用户");
-        if (codeId == null) throw new NullPointerException("id 不能为空");
+        if (auth == null) throw new NullPointerException("Не могу получить пользователя");
+        if (codeId == null) throw new NullPointerException("id Не может быть пустым");
         UserVO user = userCache.getCache(auth);
-        if (user ==null) throw  new NullPointerException("未登录");
+        if (user ==null) throw  new NullPointerException("Не вошел");
         Integer userId = user.getId();
         InvitationCode invitationCode = new InvitationCode();
         invitationCode.setId(codeId);

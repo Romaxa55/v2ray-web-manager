@@ -20,7 +20,7 @@ public class MessageReceiverVO extends BaseEntityVO implements Serializable {
 
     private MessageVO message;
     /**
-     * 已经接收？
+     * Уже получен？
      */
     private boolean received;
 

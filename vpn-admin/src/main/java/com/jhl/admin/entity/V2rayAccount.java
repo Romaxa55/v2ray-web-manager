@@ -27,7 +27,7 @@ public class V2rayAccount {
 
     private String v = "2";
     private String ps = "";
-    //地址
+    //адрес
     private String add;
     private String port;
     private String id;

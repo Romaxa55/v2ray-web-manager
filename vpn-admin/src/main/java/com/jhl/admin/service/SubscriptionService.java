@@ -31,10 +31,10 @@ public class SubscriptionService {
     V2rayAccountService v2rayAccountService;
 
     /**
-     * 同一个code 订阅
+     * Подпишитесь по тому же коду
      *
      * @param code
-     * @return base64后的数据
+     * @return Данные после base64
      */
     public String subscribe(String code) {
         Account account = findAccountByCode(code);
@@ -43,13 +43,13 @@ public class SubscriptionService {
         List<Server> servers = serverService.listByLevel(level);
 
         String b64V2rayAccount = v2rayAccountService.buildB64V2rayAccount(servers, account);
-        //需要再进行一次base64
+        //Нужно снова сделать base64
         return Base64.getEncoder().encodeToString(b64V2rayAccount.getBytes(StandardCharsets.UTF_8));
     }
 
 
     /**
-     * 通过一个订阅code寻找账号
+     * Найти аккаунт по коду подписки
      *
      * @param code
      * @return
@@ -84,7 +84,7 @@ public class SubscriptionService {
     }
 
     /**
-     * @param code 可以为空
+     * @param code Может быть пустым
      * @param id
      */
     public void updateSubscription(String code, Integer id) {

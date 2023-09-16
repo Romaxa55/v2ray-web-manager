@@ -25,7 +25,7 @@ public class PackageVO extends BaseEntityVO implements Serializable {
      *0 1 30
      */
     private Integer cycle;
-    //说明
+    //иллюстрировать
     private String description;
 
     private Integer status;

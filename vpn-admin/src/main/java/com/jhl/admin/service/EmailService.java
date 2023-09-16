@@ -35,16 +35,16 @@ public class EmailService {
             v = Utils.generateVCode();
             emailVCache.setCache(email, v);
         }
-        sendEmail(email, "验证码", String.format(emailConstant.getVCodeTemplate(), v), null);
+        sendEmail(email, "Проверочный код", String.format(emailConstant.getVCodeTemplate(), v), null);
 
     }
 
     /**
-     * 发送邮件，有对email事件重发过滤
-     * @param email 邮件
-     * @param subject 主题
-     * @param msg 主题
-     * @param emailEventHistory 发送记录
+     * Отправляйте электронные письма с фильтрацией повторной отправки для событий электронной почты.
+     * @param email почта
+     * @param subject тема
+     * @param msg письмо
+     * @param emailEventHistory отправить запись
      */
     public void sendEmail(String email, String subject, String msg, EmailEventHistory emailEventHistory) {
 
@@ -55,7 +55,7 @@ public class EmailService {
             if (emailEventHistory != null) {
                 EmailEventHistory latestHistory = findLatestHistory(email, event);
                 if (latestHistory != null && latestHistory.getUnlockDate().after(new Date())) {
-                    log.warn("已经存在email事件的发送记录，跳过当前");
+                    log.warn("Запись об отправке электронного письма уже существует, пропустите текущую.");
                     return;
                 }
             }
@@ -73,7 +73,7 @@ public class EmailService {
 
 
     public EmailEventHistory findLatestHistory(String email, String event) {
-        //寻找email最新event的一条
+        //Найдите последнее событие в электронной почте
         Page<EmailEventHistory> eeh = emailEventHistoryRepository.findAll(Example.of(EmailEventHistory.builder().email(email).event(event).build())
                 , PageRequest.of(0, 1, Sort.by(Sort.Order.desc("id"))));
         if (eeh.getTotalElements() != 1) return null;

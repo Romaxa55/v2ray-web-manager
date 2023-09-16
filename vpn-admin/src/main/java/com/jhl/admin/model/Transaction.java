@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Table(name = "t_transaction")
 public class Transaction extends BaseEntity implements Serializable {
 
-    //交易的类型是 现金 还是通过套餐码
+    //Тип транзакции: наличные или по пакетному коду.
     private Integer transType;
 
     private Integer transStatus;

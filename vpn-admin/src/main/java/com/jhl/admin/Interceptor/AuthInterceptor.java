@@ -36,13 +36,13 @@ public class AuthInterceptor implements HandlerInterceptor {
     private boolean check(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         if (handler ==null) return true;
         PreAuth preAuth = verifyAuth(handler);
-        //无需要认证
+        //Сертификация не требуется
         if (preAuth ==null) return  true;
         String token= getAuthCookie(request);
         UserVO userCache = this.userCache.getCache(token);
-        //重新登录
+        //перерегистрировать
         if (token ==null || userCache ==null) {
-            Result<Object> result = Result.builder().code(403).message("请重新登录").build();
+            Result<Object> result = Result.builder().code(403).message("Пожалуйста, войдите снова").build();
             response.setHeader("content-type","application/json;charset=UTF-8");
             response.getOutputStream().write(JSON.toJSONBytes(result));
             response.flushBuffer();
@@ -50,7 +50,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
 
         String role = userCache.getRole();
-        //超级管理员
+        //суперадминистратор
         if (role.equals("admin")) return  true;
 
         String[] roles = preAuth.value();
@@ -61,7 +61,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         }
         //其他
-        Result<Object> result = Result.builder().code(403).message("无权限").build();
+        Result<Object> result = Result.builder().code(403).message("Нет разрешения").build();
         response.setHeader("content-type","application/json;charset=UTF-8");
         response.getOutputStream().write(JSON.toJSONBytes(result));
         response.flushBuffer();

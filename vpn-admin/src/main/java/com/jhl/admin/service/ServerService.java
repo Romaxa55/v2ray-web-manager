@@ -24,21 +24,21 @@ public class ServerService {
     }
 
     /**
-     * 增加服务器前，对域名进行检测 唯一
+     * Перед добавлением сервера проверьте доменное имя.
      *
      * @param server
      */
     public void save(Server server) {
         List<Server> all = serverRepository.findAll(Example.of(Server.builder().clientDomain(server.getClientDomain()).build()));
         if (all.size() > 0) {
-            throw new IllegalArgumentException("访问域名已经存在/the domain name already exists");
+            throw new IllegalArgumentException("Доменное имя доступа уже существует/the domain name already exists");
         }
         serverRepository.save(server);
 
     }
 
     /**
-     * 根据域名查找服务器
+     * Найти серверы по доменному имени
      *
      * @param domain
      * @return
@@ -46,7 +46,7 @@ public class ServerService {
     public Server findByDomain(String domain, short level) {
         List<Server> all = serverRepository.findByLevelLessThanEqualAndStatusAndClientDomainOrderByLevelDesc(level, StatusEnum.SUCCESS.code(), domain);
         if (all.size() != 1)
-            throw new IllegalArgumentException("1.存在多个相同域名，请删除重复的。2.查找返回为空 ;参数: domain" + domain + ",level:" + level);
+            throw new IllegalArgumentException("1. Существует несколько одинаковых доменных имен, удалите повторяющиеся. 2. Поиск возвращает пустой параметр: домен." + domain + ",level:" + level);
         Server server = all.get(0);
         return server;
     }
@@ -69,7 +69,7 @@ public class ServerService {
         if (checkServer == null || checkServer.getId().equals(server.getId())) {
             serverRepository.save(server);
         } else {
-            throw new IllegalArgumentException("已经存在相同的域名");
+            throw new IllegalArgumentException("Такое же доменное имя уже существует");
         }
     }
 }

@@ -74,7 +74,7 @@ public final class Utils {
         try {
             return thisSDF.parse(thisSDF.format(date));
         } catch (ParseException e) {
-            throw new RuntimeException("转换错误", e);
+            throw new RuntimeException("ошибка преобразования", e);
         }
 
     }

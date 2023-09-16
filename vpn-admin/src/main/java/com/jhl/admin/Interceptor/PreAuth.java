@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PreAuth {
-    //权限
+    //Разрешения
     String[] value() default {};
 
 }

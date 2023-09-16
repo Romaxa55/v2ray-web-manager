@@ -32,7 +32,7 @@ public class User extends BaseEntity implements Serializable {
 
     @Transient
     private String vCode;
-    //邀请码
+    //Код приглашения
     @Transient
     private  String inviteCode;
 

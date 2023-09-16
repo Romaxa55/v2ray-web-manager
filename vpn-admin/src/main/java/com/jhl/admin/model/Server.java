@@ -23,11 +23,11 @@ public class Server extends BaseEntity implements Serializable {
     private Integer clientPort = 443;
     private Boolean supportTLS = true;
 
-    //proxy中间件管理 ip port;
+    //IP-порт управления промежуточным программным обеспечением прокси;
 
     private String proxyIp = "127.0.0.1";
     private Integer proxyPort = 8091;
-    //v2ray 开放 的 ip 和端口
+    //v2ray открыть IP и порт
     private String v2rayIp = "127.0.0.1";
     private Integer v2rayManagerPort=62789;
     private Integer v2rayPort = 6001;
@@ -37,18 +37,18 @@ public class Server extends BaseEntity implements Serializable {
 
     private String protocol;
 
-    //流量倍数
+    //Несколько трафиков
     private Double multiple;
 
-    //说明
+    //иллюстрировать
     private String desc;
-    //服务器状态
+    //Состояние сервера
     private Integer status;
 
     private String inboundTag;
 
     /**
-     * 服务器等级
+     * Уровень сервера
      */
     @Column(  columnDefinition="smallint default 0" )
     private  Short level;

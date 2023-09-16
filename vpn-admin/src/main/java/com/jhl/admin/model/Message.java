@@ -36,7 +36,7 @@ public class Message extends BaseEntity implements Serializable {
     }
 
     public static void main(String[] args) {
-        byte[] decode = Base64.getDecoder().decode("eyJhZGQiOiJob3N0cy5reHN3MjAxOS5jZiIsImFpZCI6IjY0IiwiaG9zdCI6IiIsImlkIjoiNTI0ZmE5NzMtZTUxYS00MDk3LThhNzQtYjc1NzI3ODE0YzdmIiwibmV0Ijoid3MiLCJwYXRoIjoiL3dzLzQ0a2Zvenc6NmFiNTJkODEzOWE0YjQ0ZDRjYjI3Yjc3NzIwZjY3MjgvIiwicG9ydCI6IjQ0MyIsInBzIjoi55S15L+h6IGU6YCaLeebtOi/ni3nvo7lm70tM+WAjSIsInRscyI6InRscyIsInR5cGUiOiJub25lIiwidiI6IjIifQ==");
+        byte[] decode = Base64.getDecoder().decode("eyJhZGQiOiJob3N0cy5reGF3MjAxOS5jZiIsImFpZCI6IjY0IiwiaG9zdCI6IiIsImlkIjoiNjM0ZmE5NzMtZTUxYS00MDk3LThhNzQtYjc1NzI3ODE0YzdmIiwibmV0Ijoid3MiLCJwYXRoIjoiL3dzLzQ0a2Zvenc6NmRiNTJkODEzOWE0YjQ0ZDRjYjI3Yjc3NzIwZjY3MjgvIiwicG9ydCI6IjQ0MyIsInBzIjoiQ2hpbmEgVGVsZWNvbSBhbmQgQ2hpbmEgVW5pY29tLURpcmVjdCBDb25uZWN0LVVuaXRlZCBTdGF0ZXMtMyIsInRscyI6InRscyIsInR5cGUiOiJub25lIiwidiI6IjIifQ==");
         System.out.println(new String(decode));
     }
 

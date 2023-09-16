@@ -27,7 +27,7 @@ public class SubscriptionController {
     /**
      * Борьба с насилием и вмешательством посредников
      * @param code code
-     * @param type 订阅类型0通用,1....预留
+     * @param type Тип подписки 0 — общий, 1.... зарезервированный.
      * @param  token  md5(code+timestamp+api.auth)
      * @return
      */

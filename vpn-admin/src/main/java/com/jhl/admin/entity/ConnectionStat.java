@@ -31,7 +31,7 @@ public class ConnectionStat {
     private static final Long _5MINUTES = 5 * 6000L;
 
     /**
-     * 返回2分钟内的全局总数
+     * Возвращает глобальную сумму за 2 минуты.
      *
      * @return
      */

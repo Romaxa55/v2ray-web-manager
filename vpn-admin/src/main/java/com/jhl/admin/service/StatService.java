@@ -16,11 +16,11 @@ public class StatService {
 
 
     /**
-     * 已当天为标准的from date
-     * toDate ，from+30= next
-     * next 小于maxDate
-     * @param account
-     * @return
+     * Текущий день является стандартным с даты
+     * toDate, from+30= следующий
+     * next меньше maxDate
+     * Аккаунт @param
+     * @возвращаться
      */
     public Stat createOrGetStat(Account account){
         Date today = new Date();
@@ -45,41 +45,6 @@ public class StatService {
             }
             return stat;
     }
-  /*  private void createStat(Account account) {
-        Integer accountId = account.getId();
-        Date fromDate = new Date();
-        Stat stat1 = statRepository.findByAccountIdAndFromDateBeforeAndToDateAfter(accountId, fromDate, fromDate);
-        //如果已经存在这个这个周期的返回
-        if (stat1 != null) return;
-
-        Page<Stat> statPage = statRepository.findAll(Example.of(
-                Stat.builder().accountId(accountId).build()
-                ), PageRequest.of(0, 1,
-                Sort.by(Sort.Order.desc("id"))
-                )
-        );
-
-        if (statPage != null && statPage.getSize() > 0) {
-
-            //最新的stat
-            Stat stat = statPage.getContent().get(0);
-            //上一期的toDate 等于这一期的fromDate
-            if (stat.getToDate().after(fromDate)) fromDate = stat.getToDate();
-        }
-        //to
-        Integer cycleNum = account.getCycle();
-        Date maxToDate = account.getToDate();
-        Date nextCycleDate = Utils.getDateBy(fromDate, cycleNum, Calendar.DAY_OF_YEAR);
-        Date toDate = maxToDate.after(nextCycleDate) ? nextCycleDate : maxToDate;
-
-        if (!toDate.after(fromDate)) return;
-
-        Stat stat = Stat.builder().accountId(accountId).build();
-        stat.setFromDate(fromDate);
-        stat.setToDate(toDate);
-        stat.setFlow(0l);
-        statRepository.save(stat);
-    }*/
 
 
 }

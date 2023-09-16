@@ -37,7 +37,7 @@ public class V2rayAccountService {
 
         String uuid = account.getUuid();
         if (account.getUuid() == null) {
-            //兼容旧版
+            //Совместимость со старыми версиями
             V2rayAccount oldV2ray = JSON.parseObject(account.getContent(), V2rayAccount.class);
             uuid = oldV2ray == null ? UUID.randomUUID().toString() : oldV2ray.getId();
             account.setUuid(uuid);

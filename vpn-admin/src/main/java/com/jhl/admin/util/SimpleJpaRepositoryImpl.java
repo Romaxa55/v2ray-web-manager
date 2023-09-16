@@ -31,55 +31,47 @@ public class SimpleJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> {
     }
  
     /**
-     * 通用save方法 ：新增/选择性更新
+     * Универсальный метод сохранения: новое/выборочное обновление.
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public <S extends T> S save(S entity) {
-        //获取ID
+        //Получить идентификатор
         ID entityId = (ID) entityInformation.getId(entity);
         Optional<T> optionalT;
         if (StringUtils.isEmpty(entityId)) {
-            //String uuid = UUID.randomUUID().toString();
-            ////防止UUID重复
-            //if (findById((ID) uuid).isPresent()) {
-            //    uuid = UUID.randomUUID().toString();
-            //}
-            ////若ID为空 则设置为UUID
-            //new BeanWrapperImpl(entity).setPropertyValue(entityInformation.getIdAttribute().getName(), uuid);
-            //标记为新增数据
             optionalT = Optional.empty();
         } else {
             //若ID非空 则查询最新数据
             optionalT = findById(entityId);
         }
-        //获取空属性并处理成null
+        //Получить пустые атрибуты и обработать их в ноль
         String[] nullProperties = getNullProperties(entity);
-        //若根据ID查询结果为空
+        //Если результат запроса на основе идентификатора пуст
         if (!optionalT.isPresent()) {
-            //新增
+            //Новый
             em.persist(entity);
             return entity;
         } else {
-            //1.获取最新对象
+            //1.Получить последний объект
             T target = optionalT.get();
-            //2.将非空属性覆盖到最新对象
+            //2.Перезаписать ненулевые свойства на последний объект
             BeanUtils.copyProperties(entity, target, nullProperties);
-            //3.更新非空属性
+            //3.Обновить непустые свойства
             em.merge(target);
             return entity;
         }
     }
  
     /**
-     * 获取对象的空属性
+     * Получить пустые свойства объекта
      */
     private static String[] getNullProperties(Object src) {
-        //1.获取Bean
+        //1.GetBean
         BeanWrapper srcBean = new BeanWrapperImpl(src);
-        //2.获取Bean的属性描述
+        //2.Получить описание свойства компонента
         PropertyDescriptor[] pds = srcBean.getPropertyDescriptors();
-        //3.获取Bean的空属性
+        //3.Получить пустое свойство Bean
         Set<String> properties = new HashSet<>();
         for (PropertyDescriptor propertyDescriptor : pds) {
             String propertyName = propertyDescriptor.getName();

@@ -23,7 +23,7 @@ public class PlanController {
     @ResponseBody
     @GetMapping("/plan/{id}")
     public Result get(@PathVariable Integer id) {
-        if (id == null) throw new NullPointerException("id不能为空");
+        if (id == null) throw new NullPointerException("id не может быть пустым");
         Package aPackage = packageRepository.findById(id).orElse(null);
         return Result.builder().code(Result.CODE_SUCCESS).obj(aPackage).build();
     }
@@ -31,7 +31,7 @@ public class PlanController {
     @ResponseBody
     @GetMapping("/plan")
     public Result findByPage(@CookieValue(value = COOKIE_NAME, defaultValue = "") String auth,Integer page, Integer pageSize) {
-        if (page == null || pageSize == null) throw new NullPointerException("page, pageSize不能为空");
+        if (page == null || pageSize == null) throw new NullPointerException("page, pageSize не может быть пустым");
 
         UserVO cache = userCache.getCache(auth);
         String role = cache.getRole();
@@ -40,7 +40,7 @@ public class PlanController {
             pages = packageRepository.findAll(PageRequest.of(page - 1, pageSize));
 
         }else {
-            //寻找正常的，可以显示的
+            //Ищу нормальные, которые можно отобразить
             pages = packageRepository.findAll(Example.of(Package.builder().status(V_TRUE).show(V_TRUE).build()),
                     PageRequest.of(page-1, pageSize));
         }
@@ -50,7 +50,7 @@ public class PlanController {
     @ResponseBody
     @PostMapping("/plan")
     public Result add(@RequestBody Package aPackage) {
-        if (aPackage == null) throw new NullPointerException("Package不能为空");
+        if (aPackage == null) throw new NullPointerException("Package не может быть пустым");
             packageRepository.save(aPackage);
         return Result.doSuccess();
     }
@@ -58,8 +58,8 @@ public class PlanController {
     @ResponseBody
     @PutMapping("/plan")
     public Result put(@RequestBody Package aPackage) {
-        if (aPackage == null) throw new NullPointerException("Package不能为空");
-        if (aPackage.getId() ==null) throw  new NullPointerException("id 不能为空");
+        if (aPackage == null) throw new NullPointerException("Package не может быть пустым");
+        if (aPackage.getId() ==null) throw  new NullPointerException("Id не может быть пустым");
         packageRepository.save(aPackage);
         return Result.doSuccess();
     }
@@ -67,7 +67,7 @@ public class PlanController {
     @ResponseBody
     @DeleteMapping("/plan/{id}")
     public Result delete(@PathVariable  Integer id) {
-        if (id !=null) throw new NullPointerException("id不能为空");
+        if (id !=null) throw new NullPointerException("Id не может быть пустым");
         Package aPackage = packageRepository.findById(id).orElse(null);
         if (aPackage ==null)  throw new NullPointerException("Package is null");
         aPackage.setStatus(0);

@@ -21,7 +21,7 @@ public class NoticeController {
     NoticeRepository noticeRepository;
 
     /**
-     * 创建一个Notice
+     *Создать уведомление
      *
      * @return
      */
@@ -34,7 +34,7 @@ public class NoticeController {
     }
 
     /**
-     * 更新
+     * возобновлять
      *
      * @param notice
      * @return
@@ -48,7 +48,7 @@ public class NoticeController {
     }
 
     /**
-     * 删除
+     * удалить
      *
      * @param id
      * @return
@@ -57,13 +57,13 @@ public class NoticeController {
     @ResponseBody
     @DeleteMapping("/notice/{id}")
     public Result delNotice(@PathVariable Integer id) {
-        if (id == null) throw new NullPointerException("id不能为空");
+        if (id == null) throw new NullPointerException("Id не может быть пустым");
         noticeRepository.deleteById(id);
         return Result.doSuccess();
     }
 
     /**
-     * 获取
+     * Получать
      *
      * @param id
      * @return
@@ -71,14 +71,14 @@ public class NoticeController {
     @ResponseBody
     @GetMapping("/notice/{id}")
     public Result getNotice(@PathVariable Integer id) {
-        if (id == null) throw new NullPointerException("id不能为空");
+        if (id == null) throw new NullPointerException("Id не может быть пустым");
         Notice notice = noticeRepository.findById(id).orElse(new Notice());
 
         return Result.buildSuccess(notice.toVO(NoticeVO.class), null);
     }
 
     /**
-     * 获取前7可展示的公告
+     * Получите первые 7 отображаемых объявлений
      *
      * @return
      */
@@ -100,7 +100,7 @@ public class NoticeController {
                 || notice.getStatus() == null
         ) {
             log.warn("notice:{}", notice);
-            if (notice == null) throw new NullPointerException("不能为空");
+            if (notice == null) throw new NullPointerException("Не может быть пустым");
         }
         noticeRepository.save(notice.toModel(Notice.class));
     }

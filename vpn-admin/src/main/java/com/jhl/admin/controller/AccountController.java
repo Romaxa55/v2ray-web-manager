@@ -57,7 +57,7 @@ public class AccountController {
     @Autowired
     SubscriptionService subscriptionService;
     /**
-     * 创建一个account
+     * Завести аккаунт
      *
      * @return
      */
@@ -65,17 +65,17 @@ public class AccountController {
     @ResponseBody
     @PostMapping("/account")
     public Result createAccount(@RequestBody AccountVO account) {
-        if (account == null || account.getUserId() == null) throw new NullPointerException("不能为空");
+        if (account == null || account.getUserId() == null) throw new NullPointerException("Не может быть пустым");
         accountService.create(account.toModel(Account.class));
         return Result.doSuccess();
     }
 
     /**
-     * 更新一个账号
-     * 在账号的有效期内，但是用户的流量已经超过当前周期的流量。
-     * 用户再次续费，原则上不应该修改已有的计费周期，即用户还是上不了网。
-     * 但可以通过临时修改用户流量的大小，使用户可以继续上网。
-     * 等到系统自动生成下一个周期的记录时候，在修改回来。
+     * Обновить аккаунт
+     * В течение срока действия аккаунта, но трафик пользователя превысил трафик текущего периода.
+     * При повторном продлении подписки в принципе существующий платежный цикл не должен изменяться, то есть пользователь по-прежнему не может получить доступ к Интернету.
+     * Однако размер пользовательского трафика можно временно изменить, чтобы пользователь мог продолжать пользоваться Интернетом.
+     * Подождите, пока система автоматически сгенерирует записи для следующего цикла, а затем измените их обратно.
      *
      * @param account
      * @return
@@ -84,14 +84,14 @@ public class AccountController {
     @ResponseBody
     @PutMapping("/account")
     public Result updateAccount(@RequestBody AccountVO account) {
-        if (account == null || account.getId() == null) throw new NullPointerException("不能为空");
+        if (account == null || account.getId() == null) throw new NullPointerException("Не может быть пустым");
         accountService.updateAccount(account.toModel(Account.class));
         return Result.doSuccess();
     }
 
 
     /**
-     * 根据服务器获取一个V2rayAccount
+     * Получите учетную запись V2ray на базе сервера.
      *
      * @param serverId
      * @return
@@ -103,17 +103,17 @@ public class AccountController {
         Validator.isNotNull(serverId);
         UserVO user = userCache.getCache(auth);
         Account account = accountService.getAccount(user.getId());
-        if (account == null) return Result.builder().code(500).message("账号不存在").build();
+        if (account == null) return Result.builder().code(500).message("Аккаунт не существует").build();
 
         Server server = serverService.findByIdAndStatus(serverId, StatusEnum.SUCCESS.code());
-        if (server == null) return Result.builder().code(500).message("服务器不存在").build();
+        if (server == null) return Result.builder().code(500).message("Сервер не существует").build();
 
         List<V2rayAccount> v2rayAccounts = v2rayAccountService.buildV2rayAccount(Lists.newArrayList(server), account);
         return Result.buildSuccess(v2rayAccounts.get(0), null);
     }
 
     /**
-     * 跟换服务器账号
+     * Изменить учетную запись сервера
      *
      * @param account
      * @return
@@ -122,7 +122,7 @@ public class AccountController {
     @ResponseBody
     @PutMapping("/account/server")
     public Result updateAccountServer(@RequestBody AccountVO account) {
-        if (account == null || account.getId() == null) throw new NullPointerException("不能为空");
+        if (account == null || account.getId() == null) throw new NullPointerException("Не может быть пустым");
         accountService.updateAccountServer(account.toModel(Account.class));
         return Result.doSuccess();
     }
@@ -151,7 +151,7 @@ public class AccountController {
     }
 
     /**
-     * 获取所有列表
+     * Получить все списки
      *
      * @param page
      * @param pageSize
@@ -185,7 +185,7 @@ public class AccountController {
     }
 
     /**
-     * 生成订阅url
+     * Создать URL-адрес подписки
      *
      * @param type 0通用 ,1以上备用
      * @return
@@ -199,47 +199,4 @@ public class AccountController {
         accountService.generatorSubscriptionUrl(accountId,type);
         return Result.doSuccess();
     }
-
-    /*@Deprecated
-    @PreAuth("vip")
-    @ResponseBody
-    @GetMapping("/account/connection/{accountId}")
-    public Result getConnection(@PathVariable Integer accountId) {
-        if (accountId == null) return Result.builder().code(500).message("不能为空").build();
-        Account account = accountRepository.findById(accountId).orElse(null);
-        int count = 0;
-        if (account != null) {
-            Integer serverId = account.getServerId();
-            if (serverId == null) throw new RuntimeException("未设置服务器");
-            Server server = serverRepository.findById(serverId).orElse(null);
-            String proxyIps = server.getProxyIp();
-            Integer proxyPort = server.getProxyPort();
-            String accountNo = account.getAccountNo();
-
-
-            for (String url : buildConnectionCountUrl(proxyIps, proxyPort)) {
-                Result remoteConnection = getRemoteConnection(accountId, accountNo, url);
-
-                if (remoteConnection.getCode().equals(200)) {
-                    count += (Integer) remoteConnection.getObj();
-                }
-
-            }
-        }
-        return Result.buildSuccess(count, null);
-    }*/
-
-
-
-
-
-//    private List<String> buildConnectionCountUrl(String ips, Integer port) {
-//
-//        List<String> list = new ArrayList<>();
-//        for (String ip : ips.split(",")) {
-//            String to = ip + ":" + port;
-//            list.add(String.format(PROXY_API_CONNECTION_COUNT_URL, to));
-//        }
-//        return list;
-//    }
 }

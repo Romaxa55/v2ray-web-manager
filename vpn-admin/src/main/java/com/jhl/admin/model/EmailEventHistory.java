@@ -21,7 +21,7 @@ public class EmailEventHistory extends BaseEntity implements Serializable {
     private String event;
 
     /**
-     * 下次可以发送的时间
+     * В следующий раз вы можете отправить
      */
     private Date  unlockDate;
 

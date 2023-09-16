@@ -9,7 +9,7 @@ public interface ModelI {
     /**
      *
      *
-     * @return 返回类型的xxVO
+     * @return Тип возврата xxVO
      */
 
   // V toVO();
