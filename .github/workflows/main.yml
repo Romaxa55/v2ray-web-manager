@@ -23,10 +23,10 @@ jobs:
         env:
           JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
 
-      - name: Create GitHub Release & Upload Assets
-        uses: ghaction-github-release/ghaction-github-release@master
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          version: latest
-          files: ./**/target/*.jar
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            LICENSE.txt
+            *.jar
