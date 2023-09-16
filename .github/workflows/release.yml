@@ -29,8 +29,9 @@ jobs:
       - uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ github.ref }}"
-          title: "Automated Build ${{ github.ref }} (Version: ${{ github.ref_name }})"
+          automatic_release_tag: ${{ github.ref_name }}
+          title: "Version ${{ github.ref_name }})"
           prerelease: false
           files: staging/*.jar
+          draft: false
 
