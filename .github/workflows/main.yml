@@ -21,9 +21,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           version-patch: true
           maven-servers:
-            - id: github
-              username: git
-              password: ${{ secrets.GITHUB_TOKEN }}
+            - { "id": "github", "username": "git", "password": "${{ secrets.GITHUB_TOKEN }}" }
           docker-registry-id: ghcr.io
           docker-registry-username: romaxa55
           docker-registry-password: ${{ secrets.GITHUB_TOKEN }}
