@@ -14,10 +14,10 @@ import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 类 actor 模型, 每次执行通过邮箱queue提交AbstractTask的实现，
- * 每个task 内部不存在竞态条件。
- * 支持重新运行，支持无限运行 -> setNextRunTime() {@link MonitorService#init()}
- * 生命周期： beforeRun -》runTask ->done->catchException
+ * Абстрактный класс задачи с отсрочкой. Представляет собой модель актера, где каждая задача отправляется через очередь.
+ * Каждая задача внутри этой модели не имеет условий гонки.
+ * Поддерживает повторное выполнение и бесконечное выполнение через метод setNextRunTime() {@link MonitorService#init()}.
+ * Жизненный цикл следующий: beforeRun -> runTask -> done -> catchException.
  */
 @Slf4j
 public abstract class AbstractDelayedTask implements Delayed {
@@ -45,14 +45,27 @@ public abstract class AbstractDelayedTask implements Delayed {
         return (int) (this.nextRunTime - ((AbstractDelayedTask) o).nextRunTime);
     }
 
-
+    /**
+     * Выполняется перед запуском задачи.
+     */
     public abstract void beforeRun();
 
+    /**
+     * Основной метод выполнения задачи.
+     *
+     * @param restTemplate     инструмент для выполнения HTTP-запросов.
+     * @param managerConstant  менеджер констант.
+     */
     public abstract void runTask(RestTemplate restTemplate, ManagerConstant managerConstant);
 
+    /**
+     * Выполняется после успешного завершения задачи.
+     */
     public abstract void done();
 
-
+    /**
+     * Применяет условия выполнения задачи.
+     */
     public void attachCondition() {
         TaskCondition taskCondition = getTaskCondition();
         if (taskCondition == null) taskCondition = TaskCondition.builder().build();
@@ -60,29 +73,35 @@ public abstract class AbstractDelayedTask implements Delayed {
     }
 
     /**
-     * 排除 InterruptedException
+     * Обрабатывает исключения, возникающие во время выполнения задачи.
      *
+     * @param e исключение, которое нужно обработать.
      */
     public abstract void catchException(Exception e);
 
-
+    /**
+     * Устанавливает условия выполнения для задачи.
+     *
+     * @param taskCondition условия выполнения задачи.
+     */
     public abstract void setCondition(TaskCondition taskCondition);
 
     /**
-     * 重试
+     * Пытается повторно выполнить задачу в случае неудачи.
      *
+     * @param condition условия выполнения для повторного запуска.
      */
     public void tryAgain(TaskCondition condition) {
-        //如果是无限运行的直接跳过
+        // Если задача настроена на бесконечное выполнение, просто пропускаем это.
         if (condition.getMaxFailureTimes() > 0) {
-            //如果已经超过了重试次数
+            // Если количество попыток превышает максимальное количество разрешенных попыток.
             if (condition.getFailureTimes() > condition.getMaxFailureTimes()) return;
 
             condition.setFailureTimes(condition.getFailureTimes() + 1);
         }
         setNextRunTime(System.currentTimeMillis() + condition.computeDelay());
 
-        log.debug("任务:{},content:{}，将再次执行", this.taskName, JSON.toJSONString(this));
+        log.debug("Задача:{}, содержание:{} будет выполнена снова", this.taskName, JSON.toJSONString(this));
         TaskService.addTask(this);
     }
 

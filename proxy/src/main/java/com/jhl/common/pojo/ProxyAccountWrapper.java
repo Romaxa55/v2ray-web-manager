@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class ProxyAccountWrapper extends ProxyAccount {
     /**
-     * 版本号
+     * Номер версии
      */
     private  Long version;
 

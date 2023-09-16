@@ -176,6 +176,8 @@ public class ProxyAccountService {
 
     /**
      * Возвращает размер кэша.
+     *
+     * @return Количество элементов в кэше.
      */
     public Long getSize() {
         return PA_MAP.size();
