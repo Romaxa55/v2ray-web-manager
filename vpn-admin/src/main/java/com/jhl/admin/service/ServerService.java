@@ -81,7 +81,10 @@ public class ServerService {
         try {
             checkServer = findByDomain(server.getClientDomain(), (short) 9);
         } catch (Exception e) {
-
+            // выводим исключение в консоль или лог
+            System.err.println("Ошибка при поиске сервера по домену: " + e.getMessage());
+            // или используя любую систему логирования, например:
+            // logger.error("Ошибка при поиске сервера по домену", e);
         }
         if (checkServer == null || checkServer.getId().equals(server.getId())) {
             serverRepository.save(server);
