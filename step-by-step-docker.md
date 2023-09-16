@@ -5,6 +5,30 @@
 
 # Давайте начнем
 
+### Документация по переменным окружения Docker
+
+| Переменная                 | Описание                                                     | Значение по умолчанию      |
+|---------------------------|------------------------------------------------------------|--------------------------|
+| **ADMIN_EMAIL**            | Email администратора.                                       | `admin@admin.com`        |
+| **ADMIN_PASSWORD**         | Пароль администратора.                                      | `123456`                 |
+| **PROXY_AUTH_PASSWORD**    | Пароль для взаимодействия с прокси-сервером.                | `""`                     |
+| **SMTP_HOST**              | SMTP-адрес.                                                 | `""`                     |
+| **SMTP_USERNAME**          | Имя пользователя SMTP.                                      | `""`                     |
+| **SMTP_PASSWORD**          | Пароль SMTP.                                                | `""`                     |
+| **SMTP_PORT**              | Порт SMTP.                                                  | `""`                     |
+| **SMTP_STARTTLS_ENABLED**  | Включение StartTLS для SMTP.                                | `false`                  |
+| **LOGGING_FILE_PATH**      | Путь к файлу журнала.                                       | `conf/admin.log`         |
+| **SERVER_PORT**            | Порт сервера.                                               | `9091`                   |
+| **TOMCAT_MAX_THREADS**     | Максимальное количество потоков Tomcat.                     | `5`                      |
+| **TOMCAT_MIN_THREADS**     | Минимальное количество потоков Tomcat.                      | `2`                      |
+| **DB_PASSWORD**            | Пароль базы данных.                                         | `""`                     |
+| **DB_PATH**                | Путь к файлу базы данных.                                   | `admin.db`               |
+| **DB_USERNAME**            | Имя пользователя базы данных.                               | `""`                     |
+| **HIKARI_MAX_POOL_SIZE**   | Максимальный размер пула соединений Hikari.                 | `5`                      |
+| **HIKARI_MIN_IDLE**        | Минимальное количество простаивающих соединений в пуле Hikari. | `2`                   |
+
+
+
 ## Настройка v2ray
 
 ```bash
@@ -178,6 +202,7 @@ spring:
         format_sql: ''
         show_sql: true
 " > ~/conf/admin.yaml
+
 echo "proxy:
   #[пожалуйста, измените] должен совпадать с proxy.authPassword в admin.yaml
   authPassword: ''
