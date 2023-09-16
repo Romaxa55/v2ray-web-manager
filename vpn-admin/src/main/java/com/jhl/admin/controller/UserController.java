@@ -93,9 +93,9 @@ public class UserController {
     }
 
     /**
-     * @param email
+     * @param email почта
      * @param type  reg,forgot
-     * @return
+     * @return ответ
      */
     @GetMapping("/send-email")
     public Result getVCode(String email, String type, String inviteCode) {
@@ -167,7 +167,7 @@ public class UserController {
 
     /**
      * Изменить пароль, используя исходный пароль
-     * @return
+     * @return Изменить пароль, используя исходный пароль
      */
     @PreAuth("vip")
     @PostMapping("/change-password")
@@ -182,8 +182,8 @@ public class UserController {
     /**
      * cache
      *
-     * @param auth
-     * @return
+     * @param auth сессия
+     * @return cache
      */
     // @PreAuth("vip")
     @GetMapping("/info")
@@ -201,9 +201,9 @@ public class UserController {
     /**
      * admin
      *
-     * @param page
-     * @param pageSize
-     * @return
+     * @param page страиница
+     * @param pageSize размер страниц
+     * @return admin
      */
     @PreAuth("admin")
     @GetMapping("")
@@ -236,8 +236,8 @@ public class UserController {
     /**
      * admin
      *
-     * @param id
-     * @return
+     * @param id id
+     * @return admin
      */
     @PreAuth("vip")
     @GetMapping("/{id}")
@@ -247,10 +247,10 @@ public class UserController {
     }
 
     /**
-     * admin 删除
+     * admin удалить
      *
-     * @param id
-     * @return
+     * @param id id
+     * @return admin удалить
      */
     @PreAuth("admin")
     @DeleteMapping("/{id}")
@@ -276,10 +276,10 @@ public class UserController {
     }
 
     /**
-     * admin -新增用户
+     * админ - добавить нового пользователя
      *
-     * @param user
-     * @return
+     * @param user name
+     * @return админ - добавить нового пользователя
      */
     @PreAuth("admin")
     @PostMapping("")
@@ -294,10 +294,10 @@ public class UserController {
     }
 
     /**
-     * admin -新增用户
+     * админ - добавить нового пользователя
      *
-     * @param user
-     * @return
+     * @param user name
+     * @return админ - добавить нового пользователя
      */
     @PreAuth("admin")
     @PutMapping("/status")

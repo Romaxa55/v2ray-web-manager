@@ -115,8 +115,8 @@ public class AccountController {
     /**
      * Изменить учетную запись сервера
      *
-     * @param account
-     * @return
+     * @param account Изменить учетную запись сервера
+     * @return Result.doSuccess
      */
     @PreAuth("vip")
     @ResponseBody
@@ -128,9 +128,9 @@ public class AccountController {
     }
 
     /**
-     * 获取用户账号列表
+     * Получить список учетных записей пользователей
      *
-     * @return
+     * @return Получить список учетных записей пользователей
      */
     @PreAuth("vip")
     @ResponseBody
@@ -153,9 +153,9 @@ public class AccountController {
     /**
      * Получить все списки
      *
-     * @param page
-     * @param pageSize
-     * @return
+     * @param page Страница
+     * @param pageSize Ее размер
+     * @return Получить все списки
      */
     @PreAuth("admin")
     @ResponseBody
@@ -187,8 +187,8 @@ public class AccountController {
     /**
      * Создать URL-адрес подписки
      *
-     * @param type 0通用 ,1以上备用
-     * @return
+     * @param type 0 является общим, 1 или более зарезервированы.
+     * @return Создать URL-адрес подписки
      */
     @PreAuth("vip")
     @ResponseBody

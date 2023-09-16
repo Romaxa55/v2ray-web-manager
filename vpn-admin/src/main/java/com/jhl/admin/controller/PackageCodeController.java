@@ -39,9 +39,9 @@ public class PackageCodeController {
 
     /**
      * Запросить все PKcodes
-     * @param page
-     * @param pageSize
-     * @return
+     * @param page Страница
+     * @param pageSize Размер ее
+     * @return Запросить все PKcodes
      */
     @ResponseBody
     @GetMapping("/package/code")
@@ -52,8 +52,8 @@ public class PackageCodeController {
     }
     /**
      * Обновить код
-     * @param packageCode
-     * @return
+     * @param packageCode Код
+     * @return Обновить код
      */
     @ResponseBody
     @PutMapping("/package/code")
@@ -66,8 +66,8 @@ public class PackageCodeController {
 
     /**
      * Недействительный pkcode
-     * @param id
-     * @return
+     * @param id id пакета
+     * @return Недействительный pkcode
      */
     @ResponseBody
     @GetMapping("/package/code/invalid/{id}")

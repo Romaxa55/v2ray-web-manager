@@ -91,7 +91,7 @@ public class ServerController {
     /**
      * Новый
      *
-     * @return
+     * @return Новый
      */
     @PreAuth("admin")
     @ResponseBody

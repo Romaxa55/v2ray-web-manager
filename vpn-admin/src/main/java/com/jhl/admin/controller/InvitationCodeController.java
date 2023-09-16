@@ -44,7 +44,8 @@ public class InvitationCodeController {
     /**
      * Создать код приглашения
      * @param  generateInviteCodeVO vo
-     * @return
+     * @param  auth userCache
+     * @return Result.doSuccess
      */
     @PreAuth("vip")
     @ResponseBody

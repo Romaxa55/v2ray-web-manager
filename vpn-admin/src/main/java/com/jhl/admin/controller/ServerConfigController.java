@@ -25,7 +25,7 @@ public class ServerConfigController {
     /**
      * Увеличивать
      *
-     * @return
+     * @return Увеличивать
      */
     @PreAuth("admin")
     @ResponseBody
@@ -43,8 +43,8 @@ public class ServerConfigController {
     /**
      * update
      *
-     * @param serverConfig
-     * @return
+     * @param serverConfig Конифг сервера
+     * @return update
      */
     @PreAuth("admin")
     @ResponseBody
@@ -57,9 +57,9 @@ public class ServerConfigController {
     /**
      * list
      *
-     * @param page
-     * @param pageSize
-     * @return
+     * @param page страница
+     * @param pageSize размер страниц
+     * @return list
      */
     @PreAuth("admin")
     @ResponseBody
