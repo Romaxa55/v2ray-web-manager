@@ -48,7 +48,7 @@ public class MessageService {
     /**
      * Удаленное сообщение
      *
-     * @param messageId
+     * @param messageId messageId
      */
     public void deleteMessage(Integer messageId) {
         messageRepository.deleteById(messageId);

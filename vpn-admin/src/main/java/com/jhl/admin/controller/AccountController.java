@@ -94,6 +94,7 @@ public class AccountController {
      * Получите учетную запись V2ray на базе сервера.
      *
      * @param serverId ID сервера
+     * @param auth auth
      * @return Вощвращаем сервис v2ray
      */
     @PreAuth("vip")
@@ -129,7 +130,8 @@ public class AccountController {
 
     /**
      * Получить список учетных записей пользователей
-     *
+     * @param id Integer
+     * @param auth String
      * @return Получить список учетных записей пользователей
      */
     @PreAuth("vip")
@@ -153,8 +155,9 @@ public class AccountController {
     /**
      * Получить все списки
      *
-     * @param page Страница
-     * @param pageSize Ее размер
+     * @param page Integer
+     * @param pageSize Integer
+     * @param userEmail String
      * @return Получить все списки
      */
     @PreAuth("admin")
@@ -186,7 +189,7 @@ public class AccountController {
 
     /**
      * Создать URL-адрес подписки
-     *
+     * @param auth String
      * @param type 0 является общим, 1 или более зарезервированы.
      * @return Создать URL-адрес подписки
      */

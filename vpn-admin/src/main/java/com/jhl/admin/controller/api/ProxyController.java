@@ -50,9 +50,9 @@ public class ProxyController {
     /**
      * 获取一个proxyAccount
      *
-     * @param accountNo
-     * @param domain  域名/ip
-     * @return
+     * @param accountNo accountNo
+     * @param domain  ip
+     * @return proxyAccount
      */
     @ResponseBody
     @GetMapping("/proxyAccount/ac")

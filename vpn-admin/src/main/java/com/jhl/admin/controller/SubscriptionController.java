@@ -22,11 +22,16 @@ public class SubscriptionController {
     private ProxyConstant proxyConstant;
 
     /**
-     * Борьба с насилием и вмешательством посредников
+     * Обрабатывает запросы на подписку и защищает от вмешательства посредников.
      *
-     * @param code  code
-     * @param type  Тип подписки 0 — общий, 1.... зарезервированный.
-     * @param token md5(code+timestamp+api.auth)
+     * @param code      уникальный код подписки
+     * @param type      Тип подписки: 0 — общий, 1... — зарезервированные значения.
+     * @param timestamp временная метка запроса
+     * @param token     токен для аутентификации, полученный из комбинации code, timestamp и api.auth
+     * @param response  объект HTTP-ответа для передачи данных
+     * @throws NullPointerException если один из обязательных параметров (code, type, timestamp или token) не предоставлен
+     * @throws RuntimeException если аутентификация токена не проходит проверку
+     * @throws IOException если происходит ошибка при записи данных в ответ
      */
 
     @RequestMapping(value = "/subscribe/{code}")

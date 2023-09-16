@@ -55,10 +55,10 @@ public class AccountService {
     @Autowired
     private ProxyConstant proxyConstant;
     /**
-     * 新增一个账号
+     * Добавить новую учетную запись
      *
-     * @param account
-     * @return
+     * @param account account
+     * @return Добавить новую учетную запись
      */
     public Account create(Account account) {
         Validator.isNotNull(account.getUserId());
@@ -88,6 +88,7 @@ public class AccountService {
 
     /**
      * Обновление информации об учетной записи, не связанное с сервером/контентом.
+     * @param account account
      */
     public void updateAccount(Account account) {
         Validator.isNotNull(account.getId());
@@ -128,8 +129,8 @@ public class AccountService {
     /**
      * Получите аккаунт под пользователем и заполните его
      *
-     * @param userId
-     * @return
+     * @param userId userId
+     * @return Получите аккаунт под пользователем и заполните его
      */
     public List<AccountVO> getAccounts(Integer userId) {
 
@@ -164,13 +165,8 @@ public class AccountService {
     }
 
     /**
-     * https://xxx/subscribe/{code}?type=?&timestamp=?&token=?
-     * <p>
-     * code code
-     * type Тип подписки 0 — общий, 1.... зарезервированный.
-     * token  md5(code+timestamp+api.auth)
-     *
-     * @param accountId
+     * @param accountId accountId
+     * @param type type
      */
 
     public void generatorSubscriptionUrl(Integer accountId, Integer type) {

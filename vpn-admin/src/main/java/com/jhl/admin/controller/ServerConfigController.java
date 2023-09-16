@@ -24,7 +24,7 @@ public class ServerConfigController {
 
     /**
      * Увеличивать
-     *
+     * @param serverConfig ServerConfigVO
      * @return Увеличивать
      */
     @PreAuth("admin")

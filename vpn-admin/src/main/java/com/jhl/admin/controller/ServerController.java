@@ -90,7 +90,7 @@ public class ServerController {
 
     /**
      * Новый
-     *
+     * @param server Server
      * @return Новый
      */
     @PreAuth("admin")
@@ -104,6 +104,8 @@ public class ServerController {
 
     /**
      * Исправлять
+     * @param server Server
+     * @return Исправлять
      */
     @PreAuth("admin")
     @ResponseBody

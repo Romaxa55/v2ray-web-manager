@@ -95,6 +95,7 @@ public class UserController {
     /**
      * @param email почта
      * @param type  reg,forgot
+     * @param inviteCode inviteCode
      * @return ответ
      */
     @GetMapping("/send-email")
@@ -166,8 +167,13 @@ public class UserController {
     }
 
     /**
-     * Изменить пароль, используя исходный пароль
-     * @return Изменить пароль, используя исходный пароль
+     * Обрабатывает запрос на изменение пароля пользователя, используя исходный пароль.
+     *
+     * @param changePasswordVO объект, содержащий старый и новый пароли.
+     * @param auth куки аутентификации, используемые для идентификации текущего пользователя.
+     * @return результат операции изменения пароля.
+     *
+     * @throws IllegalArgumentException если объект {@code changePasswordVO} является {@code null}.
      */
     @PreAuth("vip")
     @PostMapping("/change-password")
@@ -223,7 +229,12 @@ public class UserController {
     }
 
     /**
-     * admin
+     * Позволяет администратору добавить примечание к пользователю.
+     *
+     * @param user объект пользователя, содержащий идентификатор и примечание для добавления.
+     * @return результат операции добавления примечания.
+     *
+     * @throws RuntimeException если пользователь, его идентификатор или примечание отсутствуют.
      */
     @PreAuth("admin")
     @PostMapping("/addRemark")
@@ -234,10 +245,10 @@ public class UserController {
     }
 
     /**
-     * admin
+     * Получить информацию о пользователе по идентификатору.
      *
-     * @param id id
-     * @return admin
+     * @param id идентификатор пользователя.
+     * @return информация о пользователе.
      */
     @PreAuth("vip")
     @GetMapping("/{id}")
@@ -247,10 +258,13 @@ public class UserController {
     }
 
     /**
-     * admin удалить
+     * Удалить пользователя по идентификатору.
      *
-     * @param id id
-     * @return admin удалить
+     * @param auth аутентификационный токен текущего пользователя.
+     * @param id идентификатор пользователя для удаления.
+     * @return результат операции удаления.
+     *
+     * @throws RuntimeException если текущий пользователь пытается удалить свою учетную запись.
      */
     @PreAuth("admin")
     @DeleteMapping("/{id}")
@@ -258,7 +272,7 @@ public class UserController {
         Validator.isNotNull(id);
         Validator.isNotNull(auth);
         UserVO cacheUser =  userCache.getCache(auth);
-        if (cacheUser.getId().equals(id)) throw new RuntimeException("不能修改自己账号");
+        if (cacheUser.getId().equals(id)) throw new RuntimeException("Не могу изменить свою учетную запись");
 
         List<Account> accounts = accountRepository.findAll(Example.of(Account.builder().userId(id).build()));
 
@@ -276,10 +290,10 @@ public class UserController {
     }
 
     /**
-     * админ - добавить нового пользователя
+     * Регистрация нового пользователя администратором.
      *
-     * @param user name
-     * @return админ - добавить нового пользователя
+     * @param user данные нового пользователя.
+     * @return результат регистрации.
      */
     @PreAuth("admin")
     @PostMapping("")
@@ -294,10 +308,13 @@ public class UserController {
     }
 
     /**
-     * админ - добавить нового пользователя
+     * Изменить статус пользователя.
      *
-     * @param user name
-     * @return админ - добавить нового пользователя
+     * @param auth аутентификационный токен текущего пользователя.
+     * @param user данные пользователя, чей статус необходимо изменить.
+     * @return результат операции изменения статуса.
+     *
+     * @throws RuntimeException если текущий пользователь пытается изменить свой статус.
      */
     @PreAuth("admin")
     @PutMapping("/status")
