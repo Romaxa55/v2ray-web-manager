@@ -32,6 +32,11 @@ public class UserService {
     @Autowired
     DefendBruteForceAttackUser defendBruteForceAttackUser;
 
+    /**
+     * Регистрирует нового пользователя.
+     *
+     * @param user Пользователь, который должен быть зарегистрирован.
+     */
     public void reg(User user) {
         Validator.isNotNull(user);
         if (!emailService.verifyCode(user.getEmail(), user.getVCode())) {
@@ -41,6 +46,11 @@ public class UserService {
         adminReg(user);
     }
 
+    /**
+     * Регистрирует нового пользователя от имени администратора.
+     *
+     * @param user Пользователь для регистрации.
+     */
     public void adminReg(User user) {
         User exist = userRepository.findOne(Example.of(User.builder().email(user.getEmail()).build())).orElse(null);
         if (exist != null) {
@@ -52,6 +62,11 @@ public class UserService {
         StatService.createOrGetStat(account);
     }
 
+    /**
+     * Меняет пароль пользователя после проверки кода подтверждения.
+     *
+     * @param user Пользователь, которому нужно изменить пароль.
+     */
     public void changePassword(User user) {
         Validator.isNotNull(user);
         if (!emailService.verifyCode(user.getEmail(), user.getVCode())) {
@@ -71,9 +86,11 @@ public class UserService {
     }
 
     /**
-     * @param userId
-     * @param oldPw  Старый пароль
-     * @param newPw  Новый пароль
+     * Изменяет пароль пользователя.
+     *
+     * @param userId Идентификатор пользователя.
+     * @param oldPw  Старый пароль.
+     * @param newPw  Новый пароль.
      */
     public void changePassword(Integer userId, String oldPw, String newPw) {
         Validator.isNotNull(userId);
@@ -90,6 +107,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    /**
+     * Создает нового пользователя.
+     *
+     * @param user Пользователь для создания.
+     */
     public void create(User user) {
         String password = user.getPassword();
         String digestPW = DigestUtils.md5Hex(password);
@@ -98,6 +120,12 @@ public class UserService {
         userRepository.save(user);
     }
 
+    /**
+     * Аутентификация пользователя.
+     *
+     * @param user Данные пользователя для аутентификации.
+     * @return Аутентифицированный пользователь.
+     */
     public User login(UserVO user) {
         Validator.isNotNull(user);
         String email = user.getEmail();
@@ -128,12 +156,23 @@ public class UserService {
         return dbUser;
     }
 
-
+    /**
+     * Получает пользователя по его идентификатору.
+     *
+     * @param id Идентификатор пользователя.
+     * @return Пользователь или null, если пользователь не найден.
+     */
     public User get(Integer id) {
 
         return userRepository.findById(id).orElse(null);
     }
 
+    /**
+     * Получает мапу пользователей по списку идентификаторов.
+     *
+     * @param ids Список идентификаторов пользователей.
+     * @return Карта пользователей.
+     */
     public Map<Integer, User> getUserMapBy(Iterable<Integer> ids) {
         Map<Integer, User> userMap = new HashMap<>();
         if (ids == null) return userMap;
@@ -143,6 +182,12 @@ public class UserService {
         return userMap;
     }
 
+    /**
+     * Получает одного пользователя по заданным критериям.
+     *
+     * @param user Критерии для поиска.
+     * @return Пользователь или null, если пользователь не найден.
+     */
     public UserVO getOne(User user) {
         user.setStatus(1);
         Optional<User> one = userRepository.findOne(Example.of(user));
@@ -152,12 +197,24 @@ public class UserService {
         return userVO;
     }
 
+    /**
+     * Получает одного пользователя по критериям от имени администратора.
+     *
+     * @param user Критерии для поиска.
+     * @return Пользователь или null.
+     */
     public User getOneByAdmin(User user) {
         user.setStatus(1);
         Optional<User> one = userRepository.findOne(Example.of(user));
         return one.orElse(null);
     }
 
+    /**
+     * Получает пользователя без пароля.
+     *
+     * @param id Идентификатор пользователя.
+     * @return Пользователь без пароля или null.
+     */
     public User getUserButRemovePW(
             Integer id) {
 
@@ -167,6 +224,12 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Добавляет комментарий к пользователю.
+     *
+     * @param userId Идентификатор пользователя.
+     * @param remark Комментарий.
+     */
     public void addRemark(Integer userId, String remark) {
         User user = new User();
         user.setId(userId);
@@ -174,6 +237,12 @@ public class UserService {
         userRepository.save(user);
     }
 
+    /**
+     * Кодирует пароль пользователя.
+     *
+     * @param pw Пароль для кодирования.
+     * @return Закодированный пароль.
+     */
     public String encodePassword(String pw) {
         return DigestUtils.md5Hex(pw);
     }

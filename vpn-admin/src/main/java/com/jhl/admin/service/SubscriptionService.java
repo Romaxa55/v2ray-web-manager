@@ -16,6 +16,9 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Класс, содержащий методы для работы с подписками.
+ */
 @Service
 public class SubscriptionService {
 
@@ -31,10 +34,10 @@ public class SubscriptionService {
     V2rayAccountService v2rayAccountService;
 
     /**
-     * Подпишитесь по тому же коду
+     * Подписывается на сервис используя код и возвращает данные после кодирования в base64.
      *
-     * @param code
-     * @return Данные после base64
+     * @param code Код для подписки.
+     * @return Данные, закодированные в base64.
      */
     public String subscribe(String code) {
         Account account = findAccountByCode(code);
@@ -49,10 +52,10 @@ public class SubscriptionService {
 
 
     /**
-     * Найти аккаунт по коду подписки
+     * Находит аккаунт по коду подписки.
      *
-     * @param code
-     * @return
+     * @param code Код подписки.
+     * @return Аккаунт, соответствующий коду подписки.
      */
     public Account findAccountByCode(String code) {
         if (code == null) throw new IllegalArgumentException("code can't be null");
@@ -66,6 +69,12 @@ public class SubscriptionService {
         return accountRepository.findById(accountId).orElse(null);
     }
 
+    /**
+     * Находит подписку по ID аккаунта.
+     *
+     * @param accountId ID аккаунта.
+     * @return Подписка, связанная с данным аккаунтом.
+     */
     public Subscription findByAccountId(Integer accountId) {
         if (accountId == null) throw new IllegalArgumentException(" can't be null");
         Optional<Subscription> subscriptionOptional =
@@ -74,6 +83,11 @@ public class SubscriptionService {
         return subscriptionOptional.orElse(null);
     }
 
+    /**
+     * Добавляет новую подписку.
+     *
+     * @param subscription Объект подписки, который необходимо добавить.
+     */
     public void addSubscription(Subscription subscription) {
         if (subscription == null || subscription.getAccountId() == null) throw new RuntimeException(" can't be null");
 
@@ -84,8 +98,10 @@ public class SubscriptionService {
     }
 
     /**
-     * @param code Может быть пустым
-     * @param id
+     * Обновляет существующую подписку.
+     *
+     * @param code Новый код для подписки (может быть пустым).
+     * @param id   ID подписки, которую нужно обновить.
      */
     public void updateSubscription(String code, Integer id) {
         if (code == null) code = generatorCode();
@@ -95,7 +111,11 @@ public class SubscriptionService {
 
     }
 
-
+    /**
+     * Генерирует уникальный код для подписки.
+     *
+     * @return Сгенерированный код подписки.
+     */
     public String generatorCode() {
 
         return Utils.getCharAndNum(10);

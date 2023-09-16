@@ -24,9 +24,11 @@ public class ServerService {
     }
 
     /**
-     * Перед добавлением сервера проверьте доменное имя.
+     * Сохраняет информацию о сервере. Перед добавлением проверяет наличие
+     * совпадающего доменного имени в репозитории.
      *
-     * @param server
+     * @param server Информация о сервере, которую необходимо сохранить.
+     * @throws IllegalArgumentException если доменное имя сервера уже существует.
      */
     public void save(Server server) {
         List<Server> all = serverRepository.findAll(Example.of(Server.builder().clientDomain(server.getClientDomain()).build()));
@@ -38,10 +40,12 @@ public class ServerService {
     }
 
     /**
-     * Найти серверы по доменному имени
+     * Поиск сервера по доменному имени и уровню.
      *
-     * @param domain
-     * @return
+     * @param domain Доменное имя сервера для поиска.
+     * @param level  Уровень сервера для фильтрации.
+     * @return Информация о найденном сервере.
+     * @throws IllegalArgumentException если найдено несколько серверов с одинаковым доменным именем.
      */
     public Server findByDomain(String domain, short level) {
         List<Server> all = serverRepository.findByLevelLessThanEqualAndStatusAndClientDomainOrderByLevelDesc(level, StatusEnum.SUCCESS.code(), domain);
@@ -51,15 +55,30 @@ public class ServerService {
         return server;
     }
 
-    public Server findByIdAndStatus(Integer id, Integer status){
-        if (status==null) status= StatusEnum.SUCCESS.code();
+    /**
+     * Поиск сервера по его идентификатору и статусу.
+     *
+     * @param id     Идентификатор сервера.
+     * @param status Статус сервера.
+     * @return Информация о найденном сервере или null, если сервер не найден или его статус не совпадает.
+     */
+    public Server findByIdAndStatus(Integer id, Integer status) {
+        if (status == null) status = StatusEnum.SUCCESS.code();
         Server server = serverRepository.findById(id).orElse(null);
-        if (server !=null && !server.getStatus().equals(status)){
-            server =null;
+        if (server != null && !server.getStatus().equals(status)) {
+            server = null;
         }
-        return  server;
+        return server;
+    }
 
-    }    public void update(Server server) {
+    /**
+     * Обновляет информацию о сервере. Перед обновлением проверяет наличие
+     * сервера с аналогичным доменным именем в репозитории.
+     *
+     * @param server Информация о сервере для обновления.
+     * @throws IllegalArgumentException если найден другой сервер с таким же доменным именем.
+     */
+    public void update(Server server) {
         Server checkServer = null;
         try {
             checkServer = findByDomain(server.getClientDomain(), (short) 9);
