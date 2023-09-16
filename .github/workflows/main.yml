@@ -17,5 +17,7 @@ jobs:
 
       - name: Java Maven release
         uses: qcastel/github-actions-maven-release@v1.12.31
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
         env:
           JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
