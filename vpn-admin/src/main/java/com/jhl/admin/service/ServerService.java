@@ -50,8 +50,7 @@ public class ServerService {
         List<Server> all = serverRepository.findByLevelLessThanEqualAndStatusAndClientDomainOrderByLevelDesc(level, StatusEnum.SUCCESS.code(), domain);
         if (all.size() != 1)
             throw new IllegalArgumentException("1. Существует несколько одинаковых доменных имен, удалите повторяющиеся. 2. Поиск возвращает пустой параметр: домен." + domain + ",level:" + level);
-        Server server = all.get(0);
-        return server;
+        return all.get(0);
     }
 
     /**
