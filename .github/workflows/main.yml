@@ -29,24 +29,16 @@ jobs:
           JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
           MVN_REPO_SERVERS: '[{"id": "github", "username": "git", "password": "${{ secrets.GITHUB_TOKEN }}"}]'
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: mkdir staging && cp ./**/target/*.jar staging
+      - uses: actions/upload-artifact@v3
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
+          name: Package
+          path: staging
+          retention-days: 1
+      - uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "${{ github.run_number }}"
+          title: "Automated Build ${{ github.run_number }}"
           prerelease: false
-
-      - name: Upload JARs to Release
-        run: |
-          for jar_file in target/*.jar; do
-            echo "Uploading $jar_file to release..."
-            curl -X POST \
-                 -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                 -H "Content-Type: application/java-archive" \
-                 -T $jar_file \
-                 "${{ steps.create_release.outputs.upload_url }}?name=$(basename $jar_file)"
-          done
+          files: staging/*.jar
