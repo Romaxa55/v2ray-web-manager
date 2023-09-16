@@ -19,8 +19,7 @@ public class ServerService {
 
     public List<Server> listByLevel(Short level) {
         Validator.isNotNull(level);
-        List<Server> all = serverRepository.findByLevelLessThanEqualAndStatusOrderByLevelDesc(level, StatusEnum.SUCCESS.code());
-        return all;
+        return serverRepository.findByLevelLessThanEqualAndStatusOrderByLevelDesc(level, StatusEnum.SUCCESS.code());
     }
 
     /**
