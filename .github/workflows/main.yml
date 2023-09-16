@@ -22,3 +22,11 @@ jobs:
           version-patch: true
         env:
           JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
+
+      - name: Create GitHub Release & Upload Assets
+        uses: ghaction-github-release/ghaction-github-release@master
+        with:
+          version: latest
+          files: ./**/target/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
