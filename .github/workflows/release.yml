@@ -23,6 +23,7 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{ github.ref }}"
-          title: "Automated Build ${{ github.run_number }}"
+          title: "Automated Build ${{ github.ref }} (Version: ${{ github.ref_name }})"
           prerelease: false
           files: staging/*.jar
+
