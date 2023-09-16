@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Сохранение во время выполнения
+ * Сервис для работы с ProxyAccount.
  */
 @Slf4j
 @Component
@@ -35,17 +35,23 @@ public class ProxyAccountService {
 
     private static final Short BEGIN_BLOCK = 3;
     /**
-     * Кэширование ProxyAccount
+     * Кэширование ProxyAccount.
      * ключ: getKey(accountNo, host)
      * значение: ProxyAccount
      */
     public final  static Integer ACCOUNT_EXPIRE_TIME = 60;
     private final Cache<String, ProxyAccountWrapper> PA_MAP = CacheBuilder.newBuilder().maximumSize(1000).expireAfterWrite(ACCOUNT_EXPIRE_TIME, TimeUnit.MINUTES).build();
+
     /**
-     * Предотвращение бесконечного запроса к административному интерфейсу
+     * Кэш для учёта количества ошибочных запросов.
      */
     private final Cache<String, AtomicInteger> REQUEST_ERROR_COUNT = CacheBuilder.newBuilder().maximumSize(1000).expireAfterWrite(2, TimeUnit.MINUTES).build();
 
+    /**
+     * Добавление или обновление ProxyAccount в кэше.
+     *
+     * @param proxyAccount Объект ProxyAccountWrapper, который следует добавить или обновить в кэше.
+     */
     public void addOrUpdate(ProxyAccountWrapper proxyAccount) {
         if (null == proxyAccount || proxyAccount.getAccountId() == null
         ) throw new NullPointerException("ProxyAccountWrapper is null");
@@ -54,8 +60,11 @@ public class ProxyAccountService {
     }
 
     /**
-     * Если кэш пуст, необходимо получить блокировку аккаунта, затем запросить данные удаленно.
+     * Получение ProxyAccount. Если данных нет в кэше, выполняется удаленный запрос.
      *
+     * @param accountNo Номер аккаунта.
+     * @param host Хост.
+     * @return Объект ProxyAccountWrapper или null, если аккаунт не найден.
      */
     public ProxyAccountWrapper getProxyAccount(String accountNo, String host) {
         ProxyAccountWrapper proxyAccount = PA_MAP.getIfPresent(getKey(accountNo, host));
@@ -83,37 +92,51 @@ public class ProxyAccountService {
                         // Убедитесь, что аккаунт существует
                         v2rayService.addProxyAccount(proxyAccount.getV2rayHost(), proxyAccount.getV2rayManagerPort(), proxyAccount);
                     } catch (Exception e) {
-                        log.warn("Добавление не удалось:{}", e.getLocalizedMessage());
+                        log.warn("Ошибка при добавлении: {}", e.getLocalizedMessage());
                     }
 
 
                 }
             }
         }
-        if (reqCount >= BEGIN_BLOCK) log.info("Предотвращение удаленного запроса:{}", accountNo);
+        if (reqCount >= BEGIN_BLOCK) log.info("Предотвращение удаленного запроса: {}", accountNo);
 
 
         return proxyAccount;
     }
+
+    /**
+     * Удаленный запрос для получения ProxyAccount.
+     *
+     * @param accountNo Номер аккаунта.
+     * @param host Хост.
+     * @return Объект ProxyAccountWrapper или null, если аккаунт не найден или произошла ошибка.
+     */
     private ProxyAccountWrapper getRemotePAccount(String accountNo, String host) {
-        log.info("getRemotePAccount:{}", getKey(accountNo, host));
+        log.info("Удаленный запрос: {}", getKey(accountNo, host));
         HashMap<String, Object> kvMap = Maps.newHashMap();
         kvMap.put("accountNo", accountNo);
         kvMap.put("domain", host);
         ResponseEntity<Result> entity = restTemplate.getForEntity(managerConstant.getGetProxyAccountUrl(),
                 Result.class, kvMap);
         if (!entity.getStatusCode().is2xxSuccessful()) {
-            log.error("Ошибка getRemotePAccount:{}", entity);
+            log.error("Ошибка запроса:{}", entity);
             return null;
         }
         Result result = entity.getBody();
         if (result ==null || result.getCode() != 200) {
-            log.warn("getRemotePAccount  error:{}", JSON.toJSONString(result));
+            log.warn("Ошибка при обработке ответа: {}", JSON.toJSONString(result));
             return null;
         }
         return JSON.parseObject(JSON.toJSONString(result.getObj()), ProxyAccountWrapper.class);
     }
 
+    /**
+     * Удаление ProxyAccount из кэша.
+     *
+     * @param accountNo Номер аккаунта.
+     * @param host Хост.
+     */
     public void rmProxyAccountCache(String accountNo, String host) {
         String key = getKey(accountNo, host);
         PA_MAP.invalidate(key);
@@ -123,11 +146,14 @@ public class ProxyAccountService {
         return accountNo + ":" + host;
     }
 
-
-/*    public boolean containKey(String accountNo, String host) {
-        return PA_MAP.getIfPresent(getKey(accountNo, host)) != null;
-    }*/
-
+    /**
+     * Проверка на наличие ключа в кэше.
+     *
+     * @param accountNo Номер аккаунта.
+     * @param host Хост.
+     * @param ctxContextVersion Версия контекста.
+     * @return True, если ключ прерван; иначе - false.
+     */
     public boolean interrupted(String accountNo, String host, Long ctxContextVersion) {
         boolean result = true;
         try {
@@ -148,6 +174,9 @@ public class ProxyAccountService {
 
     }
 
+    /**
+     * Возвращает размер кэша.
+     */
     public Long getSize() {
         return PA_MAP.size();
     }
