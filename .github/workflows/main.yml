@@ -20,5 +20,8 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           version-patch: true
+          docker-registry-id: ghcr.io
+          docker-registry-username: romaxa55
+          docker-registry-password: ${{ secrets.GITHUB_TOKEN }}
         env:
           JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
