@@ -24,7 +24,6 @@ jobs:
             - id: github
               username: git
               password: ${{ secrets.GITHUB_TOKEN }}
-          maven-args: "-Dmaven.javadoc.skip=true -DskipTests -DskipITs -Dmaven.deploy.skip=true -Dtoken=${{ secrets.GITHUB_TOKEN }}"
           docker-registry-id: ghcr.io
           docker-registry-username: romaxa55
           docker-registry-password: ${{ secrets.GITHUB_TOKEN }}
