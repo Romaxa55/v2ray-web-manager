@@ -20,11 +20,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           version-patch: true
-          maven-servers:
-            - { "id": "github", "username": "git", "password": "${{ secrets.GITHUB_TOKEN }}" }
+          maven-servers: ${{ env.MVN_REPO_SERVERS }}
           docker-registry-id: ghcr.io
-          docker-registry-username: romaxa55
+          docker-registry-username: git
           docker-registry-password: ${{ secrets.GITHUB_TOKEN }}
         env:
           JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MVN_REPO_SERVERS: '[{"id": "github", "username": "git", "password": "${{ secrets.GITHUB_TOKEN }}"}]'
