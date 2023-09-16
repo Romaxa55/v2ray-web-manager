@@ -4,7 +4,7 @@
 
     <groupId>com.ljh</groupId>
     <artifactId>v2ray-jdk</artifactId>
-    <version>3.1.15</version>
+    <version>3.1.38</version>
     <packaging>jar</packaging>
     <name>v2ray-sdk</name>
     <properties>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.jhl</groupId>
             <artifactId>common</artifactId>
-            <version>3.1.15</version>
+            <version>3.1.38</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
         <dependency>
