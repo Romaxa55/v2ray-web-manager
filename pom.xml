@@ -4,7 +4,7 @@
 
     <groupId>com.jhl</groupId>
     <artifactId>vpn-manager</artifactId>
-    <version>3.1.18-SNAPSHOT</version>
+    <version>3.1.18</version>
     <packaging>pom</packaging>
     <modelVersion>4.0.0</modelVersion>
     <scm>
@@ -15,7 +15,8 @@
     <developerConnection>
         scm:git:ssh://git@github.com/romaxa55/v2ray-web-manager.git
     </developerConnection>
-</scm>
+  <tag>v3.1.18</tag>
+  </scm>
     <developers>
     <developer>
         <name>romaxa55</name>
