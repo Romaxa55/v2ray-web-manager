@@ -33,7 +33,7 @@ public class ConnectionStat {
     /**
      * Возвращает глобальную сумму за 2 минуты.
      *
-     * @return
+     * @return Возвращает глобальную сумму за 2 минуты.
      */
     public Integer getTotal() {
         final long currentTimeMillis = System.currentTimeMillis();

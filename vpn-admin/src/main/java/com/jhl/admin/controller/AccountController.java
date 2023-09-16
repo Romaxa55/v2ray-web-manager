@@ -58,8 +58,8 @@ public class AccountController {
     SubscriptionService subscriptionService;
     /**
      * Завести аккаунт
-     *
-     * @return
+     * @param account Интерфейс аккаунта
+     * @return Завести аккаунт
      */
     @PreAuth("admin")
     @ResponseBody
@@ -77,8 +77,8 @@ public class AccountController {
      * Однако размер пользовательского трафика можно временно изменить, чтобы пользователь мог продолжать пользоваться Интернетом.
      * Подождите, пока система автоматически сгенерирует записи для следующего цикла, а затем измените их обратно.
      *
-     * @param account
-     * @return
+     * @param account аккаунт
+     * @return Успешно обновился
      */
     @PreAuth("admin")
     @ResponseBody
@@ -93,8 +93,8 @@ public class AccountController {
     /**
      * Получите учетную запись V2ray на базе сервера.
      *
-     * @param serverId
-     * @return
+     * @param serverId ID сервера
+     * @return Вощвращаем сервис v2ray
      */
     @PreAuth("vip")
     @ResponseBody

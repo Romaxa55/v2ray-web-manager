@@ -12,9 +12,9 @@ public interface NoticeRepository extends  JpaRepository<Notice,Integer> {
 
     /**
      * top7
-     * @param status
-     * @param date
-     * @return
+     * @param status The status of the notice.
+     * @param date The date of the notice.
+     * @return A list of notices that match the criteria.
      */
     public List<Notice> findTop7ByStatusAndToDateAfterOrderByUpdateTimeDesc(Integer status, Date date);
 }
