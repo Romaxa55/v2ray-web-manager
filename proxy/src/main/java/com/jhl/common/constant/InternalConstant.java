@@ -33,7 +33,7 @@ public class InternalConstant {
     public void init()   {
         new Thread(()->{
 
-            // 修复新版v2ray 安全特性更新导致科学不了的问题
+            // Устранить проблему, связанную с тем, что обновление функции безопасности новой версии v2ray вызывает ненаучные проблемы.
             fixAid();
 
             JSONObject gitHubJson = restTemplate.getForObject(githubURL, JSONObject.class);

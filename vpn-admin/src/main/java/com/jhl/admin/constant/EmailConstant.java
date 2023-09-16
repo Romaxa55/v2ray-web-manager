@@ -21,7 +21,7 @@ public class EmailConstant {
     private  Boolean startTlsEnabled;
 
     public void setUserName(String userName) {
-        log.info("你设置的email是【The email you set is】:{},如果为空，说明配置有问题【If empty, there is a configuration problem.】",userName);
+        log.info("The email you set is【The email you set is】:{}. If empty, there is a configuration problem. 【If empty, there is a configuration problem.】",userName);
         this.userName = userName;
     }
 }
