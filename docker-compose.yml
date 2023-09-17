@@ -2,7 +2,7 @@ version: '3'
 
 services:
   admin:
-    image: ghcr.io/romaxa55/v2ray-web-manager/admin:v3.1.41
+    image: ghcr.io/romaxa55/v2ray-web-manager/admin:latest
     build:
       context: .
       dockerfile: Dockerfile
