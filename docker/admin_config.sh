@@ -1,7 +1,7 @@
 #!/bin/sh
 
 
-cat <<EOL > admin.yaml
+cat <<EOL > /app/conf/admin.yaml
 admin:
   email: ${ADMIN_EMAIL:-admin@admin.com}
   password: ${ADMIN_PASSWORD:-123456}
@@ -22,10 +22,10 @@ email:
   overdueDate: Срок действия вашей учетной записи скоро истекает. Пожалуйста, обратите внимание на дату окончания, которая составляет %s, и подумайте о продлении.
 
 logging:
-  file: ${LOGGING_FILE_PATH:-conf/admin.log}
+  file: ${LOGGING_FILE_PATH:-/var/log/admin.log}
   file.max-history: 7
   level:
-    root: info
+    root: ${LOGGING_LEVEL_ROOT:-info}
 
 server:
   port: ${SERVER_PORT:-9091}
@@ -41,7 +41,7 @@ spring:
       minimum-idle: ${HIKARI_MIN_IDLE:-2}
     password: ${DB_PASSWORD:-""}
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:sqlite:${DB_PATH:-admin.db}
+    url: jdbc:sqlite:${DB_PATH:-./db/admin.db}
     username: ${DB_USERNAME:-""}
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss

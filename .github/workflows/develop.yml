@@ -35,7 +35,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and push admin
+      - name: Build and push Admin Image
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -45,6 +45,18 @@ jobs:
           build-args: |
             JAR=./vpn-admin/target/admin*.jar
             JAR_PATH=/app/admin.jar
-            ENTRYPOINT=./docker/admin_entrypoint.sh
+            SCRIPT=./docker/admin_config.sh
+            SCRIPT_BIN=admin_cfg
 
-
+      - name: Build and push Proxy Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/386,linux/ppc64le,linux/s390x
+          push: true
+          tags: ghcr.io/romaxa55/v2ray-web-manager/proxy:${{ github.ref_name }}
+          build-args: |
+            JAR=./proxy/target/v2ray-proxy-*.jar
+            JAR_PATH=/app/proxy.jar
+            SCRIPT=./docker/proxy_config.sh
+            SCRIPT_BIN=proxy_cfg
