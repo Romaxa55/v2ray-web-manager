@@ -64,13 +64,13 @@ public class ReporterController {
     public Result flowStat(@RequestBody FlowStat flowStat) {
 
         if (flowStat == null) {
-            log.error("收到空的  flowStat report。。");
+            log.error("Получил пустой  flowStat report。。");
             return Result.doSuccess();
         }
         String uniqueId = flowStat.getUniqueId();
 
         if (cacheManager.getIfPresent(uniqueId) != null) {
-            log.warn("重复的stat上报{}", uniqueId);
+            log.warn("Дублирующая статистика{}", uniqueId);
             return Result.doSuccess();
         }
         synchronized (Utils.getInternersPoll().intern(uniqueId)) {
@@ -82,7 +82,7 @@ public class ReporterController {
             Date date = new Date();
             Account account = accountService.findByAccountNo(flowStat.getAccountNo());
             if (account == null) {
-                log.warn("找不到对应的account");
+                log.warn("Соответствующий аккаунт не найден");
                 return Result.doSuccess();
             }
             //账号到期
@@ -91,7 +91,7 @@ public class ReporterController {
                 proxyEventService.addProxyEvent(getProxyEvents(account));
            /* account.setStatus(0);
             accountService.updateAccount(account);*/
-                log.warn("账号到期。,{},{}", account.getAccountNo(), Utils.formatDate(account.getToDate(), null));
+                log.warn("Срок действия учетной записи истекает,{},{}", account.getAccountNo(), Utils.formatDate(account.getToDate(), null));
                 return Result.doSuccess();
             }
             Integer accountId = account.getId();
@@ -112,10 +112,10 @@ public class ReporterController {
             statRepository.save(stat);
             //防止重复
             cacheManager.put(uniqueId, object);
-            //流量超过,增加RM事件
+            //Трафик превышается, увеличьте событие RM
             if ((account.getBandwidth() * G) < used) {
-                log.warn("账号流量已经超强限制：{}", account.getAccountNo());
-                //不可用状态
+                log.warn("Трафик аккаунта был крайне ограничен：{}", account.getAccountNo());
+                //Недоступный статус
                 List<V2RayProxyEvent> v2RayProxyEvents = getProxyEvents(account);
                 proxyEventService.addProxyEvent(v2RayProxyEvents);
 

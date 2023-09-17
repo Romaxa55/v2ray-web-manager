@@ -63,11 +63,11 @@ public class ProxyController {
         }
 
         Account account = accountRepository.findOne(Example.of(Account.builder().accountNo(accountNo).status(1).build())).orElse(null);
-        if (account == null) return Result.builder().code(500).message("账号不存在").build();
+        if (account == null) return Result.builder().code(500).message("Аккаунт не существует").build();
         //check date
         if (!account.getToDate().after(new Date())) {
-            log.warn("账号到期,不能获取:{},{}", accountNo, Utils.formatDate(account.getToDate(), null));
-            return Result.builder().code(500).message("账号到期,不能获取").build();
+            log.warn("Срок действия учетной записи истек, и ее невозможно получить.:{},{}", accountNo, Utils.formatDate(account.getToDate(), null));
+            return Result.builder().code(500).message("Срок действия учетной записи истек, и ее невозможно получить.").build();
         }
         Integer accountId = account.getId();
          Date date = new Date();
@@ -79,8 +79,8 @@ public class ProxyController {
          }
          //check flow
         if ((account.getBandwidth() * G) < stat.getFlow()) {
-            log.warn("账号流量已经超过限制：{}" ,account.getAccountNo());
-            return Result.builder().code(500).message("流量已经超过限制").build();
+            log.warn("Трафик аккаунта превысил лимит：{}" ,account.getAccountNo());
+            return Result.builder().code(500).message("Трафик аккаунта превысил лимит").build();
         }
 
         Integer userId = account.getUserId();
@@ -90,8 +90,8 @@ public class ProxyController {
         Server server=  serverService.findByDomain(domain,account.getLevel());
     //https://github.com/master-coder-ll/v2ray-web-manager/issues/96
     if (account.getLevel()<server.getLevel())  {
-        log.warn("账号等级不够：{}" ,account.getAccountNo());
-        return Result.builder().code(500).message("账号等级不够").build();
+        log.warn("Уровень аккаунта недостаточен：{}" ,account.getAccountNo());
+        return Result.builder().code(500).message("Уровень аккаунта недостаточен").build();
     }
 
         User user = userRepository.findById(userId).orElse(null);
