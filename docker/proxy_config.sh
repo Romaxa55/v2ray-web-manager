@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cat <<EOL > /app/proxy.yaml
+cat <<EOL > /app/conf/proxy.yaml
 proxy:
   authPassword: ${PROXY_AUTH_PASSWORD:-''}
   localPort: ${PROXY_LOCAL_PORT:-8081}
@@ -13,7 +13,7 @@ logging:
     root: ${LOGGING_LEVEL_ROOT:-info}
 
 manager:
-  address: ${MANAGER_ADDRESS:-http://127.0.0.1:9091}
+  address: ${MANAGER_ADDRESS:-http://admin:9091}
   getProxyAccountUrl: \${manager.address}/proxy/proxyAccount/ac?accountNo={accountNo}&domain={domain}
   reportFlowUrl: \${manager.address}/report/flowStat
   reportOverConnectionLimitUrl: \${manager.address}/report/connectionLimit?accountNo={accountNo}

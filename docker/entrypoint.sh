@@ -7,7 +7,7 @@ run_jar() {
 
     if [ -f "/app/$jar_file" ]; then
         $cfg_function
-        java -jar -Xms${XMS} -Xmx${XMX} -XX:MaxDirectMemorySize=${MAX_DIRECT_MEMORY} -XX:MaxMetaspaceSize=${MAX_METASPACE_SIZE} "/app/$jar_file" --spring.config.location="/app/${jar_file%.jar}.yaml"
+        java -jar -Xms${XMS} -Xmx${XMX} -XX:MaxDirectMemorySize=${MAX_DIRECT_MEMORY} -XX:MaxMetaspaceSize=${MAX_METASPACE_SIZE} "/app/$jar_file" --spring.config.location="/app/conf/${jar_file%.jar}.yaml"
     fi
 }
 

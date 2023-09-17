@@ -1,7 +1,7 @@
 #!/bin/sh
 
 
-cat <<EOL > /app/admin.yaml
+cat <<EOL > /app/conf/admin.yaml
 admin:
   email: ${ADMIN_EMAIL:-admin@admin.com}
   password: ${ADMIN_PASSWORD:-123456}
@@ -41,7 +41,7 @@ spring:
       minimum-idle: ${HIKARI_MIN_IDLE:-2}
     password: ${DB_PASSWORD:-""}
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:sqlite:${DB_PATH:-admin.db}
+    url: jdbc:sqlite:${DB_PATH:-./db/admin.db}
     username: ${DB_USERNAME:-""}
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
