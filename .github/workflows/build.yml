@@ -2,6 +2,11 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'common/**'
+      - 'proxy/**'
+      - 'v2ray-jdk/**'
+      - 'vpn-admin/**'
   workflow_dispatch:
 
 name: Maven Release
