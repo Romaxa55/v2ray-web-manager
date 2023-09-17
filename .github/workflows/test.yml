@@ -28,6 +28,7 @@ jobs:
       - uses: mr-smithers-excellent/docker-build-push@v6
         name: Build & push Docker image
         with:
+          image: admin
           registry: ghcr.io2
           multiPlatform: true
           platform: linux/amd64,linux/arm64
