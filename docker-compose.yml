@@ -9,6 +9,8 @@ services:
       args:
         JAR: ./vpn-admin/target/admin*.jar
         JAR_PATH: /app/admin.jar
+        SCRIPT: ./docker/admin_config.sh
+        SCRIPT_BIN: admin_cfg
     environment:
       ADMIN_EMAIL: admin@admin.com
       ADMIN_PASSWORD: 123456
@@ -18,7 +20,7 @@ services:
       SMTP_PASSWORD: ""
       SMTP_PORT: ""
       SMTP_STARTTLS_ENABLED: "false"
-      LOGGING_FILE_PATH: conf/admin.log
+      LOGGING_FILE_PATH: /var/log/admin.log
       SERVER_PORT: 9091
       TOMCAT_MAX_THREADS: 5
       TOMCAT_MIN_THREADS: 2
@@ -39,6 +41,8 @@ services:
       args:
         JAR: ./proxy/target/v2ray-proxy-*.jar
         JAR_PATH: /app/v2ray-proxy.jar
+        SCRIPT: ./docker/proxy_config.sh
+        SCRIPT_BIN: proxy_cfg
     environment:
       PROXY_AUTH_PASSWORD: 'ChangeMe'
       PROXY_LOCAL_PORT: 8081

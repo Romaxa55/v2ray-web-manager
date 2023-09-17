@@ -7,7 +7,7 @@ proxy:
   maxConnections: ${PROXY_MAX_CONNECTIONS:-300}
 
 logging:
-  file: ${LOGGING_FILE_PATH:-/var/logs/v2ray-proxy.log}
+  file: ${LOGGING_FILE_PATH:-/var/log/v2ray-proxy.log}
   file.max-history: ${LOGGING_FILE_MAX_HISTORY:-7}
   level:
     root: ${LOGGING_LEVEL_ROOT:-info}
