@@ -11,8 +11,8 @@ run_jar() {
     fi
 }
 
-# Проверка наличия и запуск v2ray-proxy.jar
-run_jar "v2ray-proxy.jar" "proxy_cfg"
+# Проверка наличия и запуск proxy.jar
+run_jar "proxy.jar" "proxy_cfg"
 
 # Проверка наличия и запуск admin.jar
 run_jar "admin.jar" "admin_cfg"

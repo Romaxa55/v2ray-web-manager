@@ -40,14 +40,14 @@ services:
       dockerfile: Dockerfile
       args:
         JAR: ./proxy/target/v2ray-proxy-*.jar
-        JAR_PATH: /app/v2ray-proxy.jar
+        JAR_PATH: /app/proxy.jar
         SCRIPT: ./docker/proxy_config.sh
         SCRIPT_BIN: proxy_cfg
     environment:
       PROXY_AUTH_PASSWORD: 'ChangeMe'
       PROXY_LOCAL_PORT: 8081
       PROXY_MAX_CONNECTIONS: 300
-      LOGGING_FILE_PATH: /var/logs/v2ray-proxy.log
+      LOGGING_FILE_PATH: /var/log/v2ray-proxy.log
       LOGGING_FILE_MAX_HISTORY: 7
       LOGGING_LEVEL_ROOT: info
       MANAGER_ADDRESS: http://127.0.0.1:9091
