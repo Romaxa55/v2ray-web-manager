@@ -67,5 +67,4 @@ jobs:
           build-args: |
             JAR=./vpn-admin/target/admin*.jar
             JAR_PATH=/app/admin.jar
-            ENTRYPOINT=./docker/admin_entrypoint.sh
 
