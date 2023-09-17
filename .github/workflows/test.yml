@@ -41,7 +41,6 @@ jobs:
           push: true
           tags: ghcr.io/romaxa55/v2ray-web-manager/admin:${{ github.ref_name }}
           build-args: |
-            BUILDKIT_MULTI_PLATFORM=1
             JAR=./vpn-admin/target/admin*.jar
             JAR_PATH=/app/admin.jar
             ENTRYPOINT=./docker/admin_entrypoint.sh
