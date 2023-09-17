@@ -1,7 +1,7 @@
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - develop
 
 name: Create GitHub Release
 
@@ -24,14 +24,6 @@ jobs:
 
       - run: mvn --batch-mode --update-snapshots package
       - run: mkdir staging && cp ./**/target/*.jar staging
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Package
-          path: staging
-          retention-days: 1
-
-      - uses: scottbrenner/generate-changelog-action@master
-        id: Changelog
 
       - uses: marvinpinto/action-automatic-releases@latest
         with:
