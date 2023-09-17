@@ -21,7 +21,6 @@ jobs:
 
       - run: mvn --batch-mode --update-snapshots package
       - run: mkdir staging && cp ./**/target/*.jar staging
-      - run: env
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
