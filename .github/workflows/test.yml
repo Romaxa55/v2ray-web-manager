@@ -39,10 +39,10 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ghcr.io/${{ github.repository }}/admin:${{ github.ref_name }}
-          build-args:
-            BUILDKIT_MULTI_PLATFORM: 1
-            JAR: ./vpn-admin/target/admin*.jar
-            JAR_PATH: /app/admin.jar
-            ENTRYPOINT: ./docker/admin_entrypoint.sh
+          build-args: |
+            BUILDKIT_MULTI_PLATFORM=1
+            JAR=./vpn-admin/target/admin*.jar
+            JAR_PATH=/app/admin.jar
+            ENTRYPOINT=./docker/admin_entrypoint.sh
 
 
