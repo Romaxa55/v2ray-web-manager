@@ -29,10 +29,10 @@ jobs:
         name: Build & push Docker image
         with:
           image: admin
-          registry: ghcr.io2
-          multiPlatform: true
-          platform: linux/amd64,linux/arm64
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+          multiPlatform: true
+          platform: linux/amd64,linux/arm64
 
 
