@@ -43,6 +43,6 @@ jobs:
             BUILDKIT_MULTI_PLATFORM: 1
             JAR: ./vpn-admin/target/admin*.jar
             JAR_PATH: /app/admin.jar
-            ENTRYPOINY: ./docker/admin_entrypoint.sh
+            ENTRYPOINT: ./docker/admin_entrypoint.sh
 
 
