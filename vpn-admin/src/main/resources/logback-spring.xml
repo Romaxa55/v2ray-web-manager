@@ -10,7 +10,7 @@
             <level>ERROR</level>
         </filter>
         <encoder>
-            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
         <file>${ERROR_LOG_FILE}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -19,7 +19,7 @@
             <maxHistory>${LOG_FILE_MAX_HISTORY:-0}</maxHistory>
         </rollingPolicy>
     </appender>
-    <root >
+    <root>
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="FILE" />
             <appender-ref ref="FILE-ERROR" />
