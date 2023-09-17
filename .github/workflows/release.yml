@@ -63,7 +63,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/386,linux/ppc64le,linux/s390x
           push: true
-          tags: ghcr.io/romaxa55/v2ray-web-manager/admin:${{ github.ref_name }}
+          tags: ghcr.io/romaxa55/v2ray-web-manager/admin:${{ github.ref_name }},ghcr.io/romaxa55/v2ray-web-manager/admin:latest
           build-args: |
             JAR=./vpn-admin/target/admin*.jar
             JAR_PATH=/app/admin.jar
@@ -76,7 +76,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/386,linux/ppc64le,linux/s390x
           push: true
-          tags: ghcr.io/romaxa55/v2ray-web-manager/proxy:${{ github.ref_name }}
+          tags: ghcr.io/romaxa55/v2ray-web-manager/proxy:${{ github.ref_name }},ghcr.io/romaxa55/v2ray-web-manager/proxy:latest
           build-args: |
             JAR=./proxy/target/v2ray-proxy-*.jar
             JAR_PATH=/app/proxy.jar
