@@ -1,7 +1,7 @@
 #!/bin/sh
 
 
-cat <<EOL > admin.yaml
+cat <<EOL > /app/admin.yaml
 admin:
   email: ${ADMIN_EMAIL:-admin@admin.com}
   password: ${ADMIN_PASSWORD:-123456}
@@ -22,10 +22,10 @@ email:
   overdueDate: Срок действия вашей учетной записи скоро истекает. Пожалуйста, обратите внимание на дату окончания, которая составляет %s, и подумайте о продлении.
 
 logging:
-  file: ${LOGGING_FILE_PATH:-conf/admin.log}
+  file: ${LOGGING_FILE_PATH:-/var/log/admin.log}
   file.max-history: 7
   level:
-    root: info
+    root: ${LOGGING_LEVEL_ROOT:-info}
 
 server:
   port: ${SERVER_PORT:-9091}

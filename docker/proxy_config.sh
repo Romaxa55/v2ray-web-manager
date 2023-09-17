@@ -1,13 +1,13 @@
 #!/bin/sh
 
-cat <<EOL > proxy.yaml
+cat <<EOL > /app/proxy.yaml
 proxy:
   authPassword: ${PROXY_AUTH_PASSWORD:-''}
   localPort: ${PROXY_LOCAL_PORT:-8081}
   maxConnections: ${PROXY_MAX_CONNECTIONS:-300}
 
 logging:
-  file: ${LOGGING_FILE_PATH:-/opt/jar/logs/v2ray-proxy.log}
+  file: ${LOGGING_FILE_PATH:-/var/logs/v2ray-proxy.log}
   file.max-history: ${LOGGING_FILE_MAX_HISTORY:-7}
   level:
     root: ${LOGGING_LEVEL_ROOT:-info}
