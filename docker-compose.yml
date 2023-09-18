@@ -70,10 +70,10 @@ services:
     networks: [v2ray]
 #    volumes:
 #      - ./conf/config.json:/app/config.json
-    ports:
-      - "8091:8091"
-      - "62182:62182"
-      - "1310:1310"
+#    ports:
+#      - "8091:8091"
+#      - "62182:62182"
+#      - "1310:1310"
 
   web:
     image: ghcr.io/romaxa55/v2ray-manager-console:latest
