@@ -32,9 +32,8 @@ services:
     volumes:
       - ./conf:/app/db/
     networks: [ v2ray ]
-
-    ports:
-      - "9091:9091"
+#    ports:
+#      - "9091:9091"
 
   proxy:
     image: ghcr.io/romaxa55/v2ray-web-manager/proxy:latest
@@ -61,9 +60,8 @@ services:
     networks: [v2ray]
 #    volumes:
 #      - ./conf/config.json:/app/config.json
-
-    ports:
-      - "8091:8091"
+#    ports:
+#      - "8091:8091"
 
   web:
     image: ghcr.io/romaxa55/v2ray-manager-console:latest
@@ -71,8 +69,62 @@ services:
     environment:
       VUE_APP_BASE_API: '/'
     networks: [ v2ray ]
+#    ports:
+#      - "8181:80"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.web.tls=true
+      - traefik.http.routers.web.rule=Host(`$DAMAIN_VPN`)
+      - traefik.http.routers.web.entrypoints=websecure
+      - traefik.http.routers.web.tls.certresolver=myresolver
+      - traefik.http.services.web.loadbalancer.server.port=80
+
+  traefik:
+    image: traefik:latest
+    environment:
+      CF_DNS_API_TOKEN: $CF_API_KEY # use export CF_API_KEY=token clioudflare
+    command:
+      - --log=true
+      - --log.level=INFO
+      - --global.checknewversion=false
+      - --global.sendanonymoususage=false
+      - --providers.docker
+      - --providers.docker.swarmMode=false
+      - --providers.docker.swarmModeRefreshSeconds=1
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.watch=true
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.myresolver.acme.dnschallenge=true
+      - --certificatesresolvers.myresolver.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.myresolver.acme.email=info@${DOAMIN}
+      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      - "--api.insecure=true" # Включить панель управления
+      - "--api.dashboard=true" # Включить панель управления
     ports:
-      - "8181:80"
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+    networks: [ v2ray ]
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - letsencrypt:/letsencrypt
+    labels:
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+      - "traefik.http.routers.http-catchall.entrypoints=web"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+
+volumes:
+  letsencrypt:
 
 networks:
   v2ray:
