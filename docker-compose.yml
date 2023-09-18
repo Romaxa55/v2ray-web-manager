@@ -14,9 +14,9 @@ services:
         SCRIPT: ./docker/admin_config.sh
         SCRIPT_BIN: admin_cfg
     environment:
-      ADMIN_EMAIL: admin@admin.com
-      ADMIN_PASSWORD: 123456
-      PROXY_AUTH_PASSWORD: "ChangeMe"
+      ADMIN_EMAIL: $ADMIN_USER
+      ADMIN_PASSWORD: $ADMIN_PASSWORD
+      PROXY_AUTH_PASSWORD: $PROXY_AUTH_PASSWORD
       SMTP_HOST: ""
       SMTP_USERNAME: ""
       SMTP_PASSWORD: ""
@@ -30,10 +30,10 @@ services:
       HIKARI_MAX_POOL_SIZE: 5
       HIKARI_MIN_IDLE: 2
       LOGGING_LEVEL_ROOT: info
-      XMS: 100m
-      XMX: 1024m
-      MAX_DIRECT_MEMORY: 600M
-      MAX_METASPACE_SIZE: 300m
+      XMS: 128m
+      XMX: 800m
+      MAX_DIRECT_MEMORY: 200M
+      MAX_METASPACE_SIZE: 100m
     volumes:
       - ./conf:/app/db/
     networks: [ v2ray ]
@@ -53,7 +53,7 @@ services:
         SCRIPT: ./docker/proxy_config.sh
         SCRIPT_BIN: proxy_cfg
     environment:
-      PROXY_AUTH_PASSWORD: 'ChangeMe'
+      PROXY_AUTH_PASSWORD: $PROXY_AUTH_PASSWORD
       PROXY_LOCAL_PORT: 8081
       PROXY_MAX_CONNECTIONS: 300
       LOGGING_FILE_PATH: /var/log/v2ray-proxy.log
@@ -63,10 +63,10 @@ services:
       SERVER_PORT: 8091
       TOMCAT_MAX_THREADS: 1
       TOMCAT_MIN_THREADS: 1
-      XMS: 100m
-      XMX: 1024m
-      MAX_DIRECT_MEMORY: 600M
-      MAX_METASPACE_SIZE: 300m
+      XMS: 128m
+      XMX: 1536m
+      MAX_DIRECT_MEMORY: 400M
+      MAX_METASPACE_SIZE: 200m
     networks: [v2ray]
 #    volumes:
 #      - ./conf/config.json:/app/config.json
