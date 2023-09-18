@@ -74,7 +74,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.web.tls=true
-      - traefik.http.routers.web.rule=Host(`$DAMAIN_VPN`)
+      - traefik.http.routers.web.rule=Host(`gb.$DAMAIN`)
       - traefik.http.routers.web.entrypoints=websecure
       - traefik.http.routers.web.tls.certresolver=myresolver
       - traefik.http.services.web.loadbalancer.server.port=80
