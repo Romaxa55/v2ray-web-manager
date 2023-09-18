@@ -1,8 +1,9 @@
-version: '3'
+version: '3.9'
 
 services:
   admin:
     image: ghcr.io/romaxa55/v2ray-web-manager/admin:latest
+    container_name: admin
     build:
       context: .
       dockerfile: Dockerfile
@@ -30,11 +31,13 @@ services:
       LOGGING_LEVEL_ROOT: info
     volumes:
       - ./conf:/app/db/
+    networks: [ v2ray ]
     ports:
       - "9091:9091"
 
   proxy:
     image: ghcr.io/romaxa55/v2ray-web-manager/proxy:latest
+    container_name: proxy
     build:
       context: .
       dockerfile: Dockerfile
@@ -54,5 +57,20 @@ services:
       SERVER_PORT: 8091
       TOMCAT_MAX_THREADS: 1
       TOMCAT_MIN_THREADS: 1
+    networks: [v2ray]
     ports:
       - "8091:8091"
+
+  web:
+    image: ghcr.io/romaxa55/v2ray-manager-console:latest
+    container_name: web
+    environment:
+      VUE_APP_BASE_API: '/'
+    networks: [ v2ray ]
+    ports:
+      - "8181:80"
+
+networks:
+  v2ray:
+    name: v2ray
+    attachable: true
