@@ -1,6 +1,6 @@
 ARG V2RAY_VERSION=5.7.0
 
-FROM openjdk:8-jre-alpine3.9 as admin
+FROM openjdk:8-jre as admin
 ARG V2RAY_VERSION
 ARG JAR
 ARG JAR_PATH
@@ -32,14 +32,8 @@ RUN if [ "$SCRIPT_BIN" = "proxy_cfg" ]; then \
     case $ARCH in \
       x86_64) \
         V2RAY_FILE="v2ray-linux-64.zip" ;; \
-      armv6l) \
-        V2RAY_FILE="v2ray-linux-arm32-v6.zip" ;; \
-      armv7l) \
-        V2RAY_FILE="v2ray-linux-arm32-v7a.zip" ;; \
       aarch64) \
         V2RAY_FILE="v2ray-linux-arm64-v8a.zip" ;; \
-      i386) \
-        V2RAY_FILE="v2ray-linux-32.zip" ;; \
       *) \
         echo "Unsupported architecture"; exit 1 ;; \
     esac; \
