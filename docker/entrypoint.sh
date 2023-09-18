@@ -7,6 +7,12 @@ run_jar() {
 
     if [ -f "/app/$jar_file" ]; then
         $cfg_function
+        # Если файл proxy.jar, запускаем v2ray
+        if [ "$jar_file" = "proxy.jar" ]; then
+            if [ -f "/app/config.json" ]; then
+                /usr/local/bin/v2ray run &
+            fi
+        fi
         java -jar -Xms${XMS} -Xmx${XMX} -XX:MaxDirectMemorySize=${MAX_DIRECT_MEMORY} -XX:MaxMetaspaceSize=${MAX_METASPACE_SIZE} "/app/$jar_file" --spring.config.location="/app/conf/${jar_file%.jar}.yaml"
     fi
 }
