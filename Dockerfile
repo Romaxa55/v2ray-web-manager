@@ -1,9 +1,11 @@
+ARG V2RAY_VERSION=5.7.0
+
 FROM openjdk:8-jre-alpine3.9 as admin
+ARG V2RAY_VERSION
 ARG JAR
 ARG JAR_PATH
 ARG SCRIPT
 ARG SCRIPT_BIN
-
 ENV XMS=40m
 ENV XMX=300m
 ENV MAX_DIRECT_MEMORY=300M
@@ -22,6 +24,34 @@ RUN set -x && \
     mkdir db conf && \
     chown -R 1000:nogroup . && \
     chmod +x /usr/local/bin/$SCRIPT_BIN /entrypoint.sh
+
+# Проверка значения SCRIPT_BIN и загрузка бинарного файла, если условие выполняется
+RUN if [ "$SCRIPT_BIN" = "proxy_cfg" ]; then \
+    apk add --no-cache curl && \
+    ARCH=$(uname -m); \
+    case $ARCH in \
+      x86_64) \
+        V2RAY_FILE="v2ray-linux-64.zip" ;; \
+      armv6l) \
+        V2RAY_FILE="v2ray-linux-arm32-v6.zip" ;; \
+      armv7l) \
+        V2RAY_FILE="v2ray-linux-arm32-v7a.zip" ;; \
+      aarch64) \
+        V2RAY_FILE="v2ray-linux-arm64-v8a.zip" ;; \
+      i386) \
+        V2RAY_FILE="v2ray-linux-32.zip" ;; \
+      *) \
+        echo "Unsupported architecture"; exit 1 ;; \
+    esac; \
+    curl -L -o v2ray.zip https://github.com/v2fly/v2ray-core/releases/download/v$V2RAY_VERSION/$V2RAY_FILE && \
+    unzip v2ray.zip && \
+    mv v2ray /usr/local/bin/ && \
+    mv geoip.dat /usr/local/bin/ && \
+    chmod +x /usr/local/bin/v2ray && \
+    rm v2ray.zip; \
+    fi
+COPY conf/config.json /app/config.json
+
 
 EXPOSE 9091/tcp
 ENTRYPOINT ["/entrypoint.sh"]

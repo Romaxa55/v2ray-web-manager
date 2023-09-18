@@ -59,6 +59,8 @@ services:
       TOMCAT_MAX_THREADS: 1
       TOMCAT_MIN_THREADS: 1
     networks: [v2ray]
+#    volumes:
+#      - ./conf/config.json:/app/config.json
     ports:
       - "8091:8091"
 
