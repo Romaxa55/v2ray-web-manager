@@ -4,6 +4,7 @@ services:
   admin:
     image: ghcr.io/romaxa55/v2ray-web-manager/admin:latest
     container_name: admin
+    restart: on-failure
     build:
       context: .
       dockerfile: Dockerfile
@@ -38,6 +39,7 @@ services:
   proxy:
     image: ghcr.io/romaxa55/v2ray-web-manager/proxy:latest
     container_name: proxy
+    restart: on-failure
     build:
       context: .
       dockerfile: Dockerfile
@@ -66,6 +68,7 @@ services:
   web:
     image: ghcr.io/romaxa55/v2ray-manager-console:latest
     container_name: web
+    restart: on-failure
     environment:
       VUE_APP_BASE_API: '/'
       DOMAIN: $DOMAIN
