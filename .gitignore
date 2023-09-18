@@ -55,3 +55,4 @@ package-lock.json
 yarn.lock
 /conf/admin.db
 /conf/admin.log.ERROR
+/.env

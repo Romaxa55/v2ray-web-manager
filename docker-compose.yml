@@ -4,6 +4,7 @@ services:
   admin:
     image: ghcr.io/romaxa55/v2ray-web-manager/admin:latest
     container_name: admin
+    restart: on-failure
     build:
       context: .
       dockerfile: Dockerfile
@@ -13,9 +14,9 @@ services:
         SCRIPT: ./docker/admin_config.sh
         SCRIPT_BIN: admin_cfg
     environment:
-      ADMIN_EMAIL: admin@admin.com
-      ADMIN_PASSWORD: 123456
-      PROXY_AUTH_PASSWORD: "ChangeMe"
+      ADMIN_EMAIL: $ADMIN_USER
+      ADMIN_PASSWORD: $ADMIN_PASSWORD
+      PROXY_AUTH_PASSWORD: $PROXY_AUTH_PASSWORD
       SMTP_HOST: ""
       SMTP_USERNAME: ""
       SMTP_PASSWORD: ""
@@ -29,16 +30,20 @@ services:
       HIKARI_MAX_POOL_SIZE: 5
       HIKARI_MIN_IDLE: 2
       LOGGING_LEVEL_ROOT: info
+      XMS: 128m
+      XMX: 800m
+      MAX_DIRECT_MEMORY: 200M
+      MAX_METASPACE_SIZE: 100m
     volumes:
       - ./conf:/app/db/
     networks: [ v2ray ]
-
-    ports:
-      - "9091:9091"
+#    ports:
+#      - "9091:9091"
 
   proxy:
     image: ghcr.io/romaxa55/v2ray-web-manager/proxy:latest
     container_name: proxy
+    restart: on-failure
     build:
       context: .
       dockerfile: Dockerfile
@@ -48,7 +53,7 @@ services:
         SCRIPT: ./docker/proxy_config.sh
         SCRIPT_BIN: proxy_cfg
     environment:
-      PROXY_AUTH_PASSWORD: 'ChangeMe'
+      PROXY_AUTH_PASSWORD: $PROXY_AUTH_PASSWORD
       PROXY_LOCAL_PORT: 8081
       PROXY_MAX_CONNECTIONS: 300
       LOGGING_FILE_PATH: /var/log/v2ray-proxy.log
@@ -58,21 +63,83 @@ services:
       SERVER_PORT: 8091
       TOMCAT_MAX_THREADS: 1
       TOMCAT_MIN_THREADS: 1
+      XMS: 128m
+      XMX: 1536m
+      MAX_DIRECT_MEMORY: 400M
+      MAX_METASPACE_SIZE: 200m
     networks: [v2ray]
 #    volumes:
 #      - ./conf/config.json:/app/config.json
-
-    ports:
-      - "8091:8091"
+#    ports:
+#      - "8091:8091"
 
   web:
     image: ghcr.io/romaxa55/v2ray-manager-console:latest
     container_name: web
+    restart: on-failure
     environment:
       VUE_APP_BASE_API: '/'
+      DOMAIN: $DOMAIN
     networks: [ v2ray ]
+#    ports:
+#      - "8181:80"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.web.tls=true
+      - traefik.http.routers.web.rule=Host(`amsterdam.${DOMAIN}`)
+      - traefik.http.routers.web.entrypoints=websecure
+      - traefik.http.routers.web.tls.certresolver=myresolver
+      - traefik.http.services.web.loadbalancer.server.port=80
+
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    restart: on-failure
+    environment:
+      CF_DNS_API_TOKEN: $CF_API_KEY # use export CF_API_KEY=token clioudflare
+      DOMAIN: $DOMAIN
+    command:
+      - --log=true
+      - --log.level=INFO
+      - --global.checknewversion=false
+      - --global.sendanonymoususage=false
+      - --providers.docker
+      - --providers.docker.swarmMode=false
+      - --providers.docker.swarmModeRefreshSeconds=1
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.watch=true
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.myresolver.acme.dnschallenge=true
+      - --certificatesresolvers.myresolver.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.myresolver.acme.email=info@${DOAMIN}
+      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      - "--api.insecure=true" # Включить панель управления
+      - "--api.dashboard=true" # Включить панель управления
     ports:
-      - "8181:80"
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+    networks: [ v2ray ]
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - letsencrypt:/letsencrypt
+    labels:
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+      - "traefik.http.routers.http-catchall.entrypoints=web"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+
+volumes:
+  letsencrypt:
 
 networks:
   v2ray:

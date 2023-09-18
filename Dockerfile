@@ -1,6 +1,6 @@
 ARG V2RAY_VERSION=5.7.0
 
-FROM openjdk:8-jre-alpine3.9 as admin
+FROM openjdk:8-jre-slim as admin
 ARG V2RAY_VERSION
 ARG JAR
 ARG JAR_PATH
@@ -27,19 +27,14 @@ RUN set -x && \
 
 # Проверка значения SCRIPT_BIN и загрузка бинарного файла, если условие выполняется
 RUN if [ "$SCRIPT_BIN" = "proxy_cfg" ]; then \
-    apk add --no-cache curl && \
+    apt-get update && \
+    apt-get install -y curl unzip bash && \
     ARCH=$(uname -m); \
     case $ARCH in \
       x86_64) \
         V2RAY_FILE="v2ray-linux-64.zip" ;; \
-      armv6l) \
-        V2RAY_FILE="v2ray-linux-arm32-v6.zip" ;; \
-      armv7l) \
-        V2RAY_FILE="v2ray-linux-arm32-v7a.zip" ;; \
       aarch64) \
         V2RAY_FILE="v2ray-linux-arm64-v8a.zip" ;; \
-      i386) \
-        V2RAY_FILE="v2ray-linux-32.zip" ;; \
       *) \
         echo "Unsupported architecture"; exit 1 ;; \
     esac; \
@@ -48,8 +43,12 @@ RUN if [ "$SCRIPT_BIN" = "proxy_cfg" ]; then \
     mv v2ray /usr/local/bin/ && \
     mv geoip.dat /usr/local/bin/ && \
     chmod +x /usr/local/bin/v2ray && \
-    rm v2ray.zip; \
+    rm v2ray.zip && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*; \
     fi
+    
 COPY conf/config.json /app/config.json
 
 

@@ -39,7 +39,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/386
+          platforms: linux/amd64,linux/arm64/v8
           push: true
           tags: ghcr.io/romaxa55/v2ray-web-manager/admin:${{ github.ref_name }}
           build-args: |
@@ -52,7 +52,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/386
+          platforms: linux/amd64,linux/arm64/v8
           push: true
           tags: ghcr.io/romaxa55/v2ray-web-manager/proxy:${{ github.ref_name }}
           build-args: |
