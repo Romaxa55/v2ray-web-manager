@@ -10,7 +10,7 @@
   "inboundDetour": [
     {
       "listen": "127.0.0.1",
-      "port": 62789,
+      "port": 62182,
       "protocol": "dokodemo-door",
       "settings": {
         "address": "127.0.0.1"
@@ -24,7 +24,7 @@
   "inbounds": [
     {
       "listen": "127.0.0.1",
-      "port": 6001,
+      "port": 1310,
       "protocol": "vmess",
       "settings": {
         "clients": [],
@@ -45,7 +45,7 @@
           "path": "/ws/"
         }
       },
-      "tag": "6001"
+      "tag": "1310"
     }
   ],
   "outbounds": [
