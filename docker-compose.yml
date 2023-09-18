@@ -32,6 +32,7 @@ services:
     volumes:
       - ./conf:/app/db/
     networks: [ v2ray ]
+
     ports:
       - "9091:9091"
 
