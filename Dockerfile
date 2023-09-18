@@ -48,7 +48,7 @@ RUN if [ "$SCRIPT_BIN" = "proxy_cfg" ]; then \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*; \
     fi
-
+    
 COPY conf/config.json /app/config.json
 
 
