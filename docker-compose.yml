@@ -93,6 +93,7 @@ services:
 
 #  traefik:
 #    image: traefik:latest
+#    container_name: traefik
 #    restart: on-failure
 #    environment:
 #      CF_DNS_API_TOKEN: $CF_API_KEY # use export CF_API_KEY=token clioudflare
