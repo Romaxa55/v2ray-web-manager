@@ -59,7 +59,7 @@ services:
       LOGGING_FILE_PATH: /var/log/v2ray-proxy.log
       LOGGING_FILE_MAX_HISTORY: 7
       LOGGING_LEVEL_ROOT: info
-      MANAGER_ADDRESS: http://127.0.0.1:9091
+      MANAGER_ADDRESS: http://admin:9091
       SERVER_PORT: 8091
       TOMCAT_MAX_THREADS: 1
       TOMCAT_MIN_THREADS: 1
@@ -70,8 +70,10 @@ services:
     networks: [v2ray]
 #    volumes:
 #      - ./conf/config.json:/app/config.json
-#    ports:
-#      - "8091:8091"
+    ports:
+      - "8091:8091"
+      - "62182:62182"
+      - "1310:1310"
 
   web:
     image: ghcr.io/romaxa55/v2ray-manager-console:latest
