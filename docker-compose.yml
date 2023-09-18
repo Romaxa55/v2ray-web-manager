@@ -81,8 +81,8 @@ services:
       VUE_APP_BASE_API: '/'
       DOMAIN: $DOMAIN
     networks: [ v2ray ]
-#    ports:
-#      - "8181:80"
+    ports:
+      - "8181:80"
     labels:
       - traefik.enable=true
       - traefik.http.routers.web.tls=true
