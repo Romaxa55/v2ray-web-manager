@@ -105,6 +105,7 @@ services:
       - --log.level=INFO
       - --global.checknewversion=false
       - --global.sendanonymoususage=false
+      -  --providers.docker.network=v2ray
       - --providers.docker
       - --providers.docker.swarmMode=false
       - --providers.docker.swarmModeRefreshSeconds=1
