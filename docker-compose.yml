@@ -129,9 +129,7 @@ services:
         published: 443
         protocol: tcp
         mode: host
-    networks:
-      - v2ray
-      - public
+    networks: [ v2ray ]
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - letsencrypt:/letsencrypt
@@ -149,5 +147,3 @@ networks:
   v2ray:
     name: v2ray
     attachable: true
-  public:
-    external: true
